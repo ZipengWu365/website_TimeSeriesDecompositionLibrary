@@ -112,11 +112,11 @@ python -m tsdecomp export \\
           <div className="rounded-3xl border border-[color:var(--border)] bg-white/80 p-6 shadow-[var(--shadow)]">
             <h3 className="text-lg font-semibold">How to cite</h3>
             <pre className="mt-3 whitespace-pre-wrap rounded-2xl bg-[#0f1418] p-4 text-xs text-white">
-{`@inproceedings{tsdecomp2026,
+{`@misc{tsdecomp2026,
   title={Interpretable Time-Series Decomposition as Component Recovery},
   author={Anonymous Authors},
-  booktitle={ICML},
-  year={2026}
+  year={2026},
+  note={Under review.}
 }`}
             </pre>
           </div>
