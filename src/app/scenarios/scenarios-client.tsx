@@ -81,7 +81,7 @@ export default function ScenariosClient({ scenarios, suites }: ScenariosClientPr
             <p className="mt-2 text-sm text-[color:var(--muted)]">{scenario.description}</p>
             <div className="mt-4 flex flex-wrap gap-2 text-xs text-[color:var(--muted)]">
               <span className="rounded-full border border-[color:var(--border)] px-3 py-1">
-                periods: {scenario.base_periods.join(", ")}
+                periods: {scenario.base_periods.length ? scenario.base_periods.join(", ") : "none"}
               </span>
               {scenario.tags.map((tag) => (
                 <span

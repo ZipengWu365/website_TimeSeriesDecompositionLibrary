@@ -214,7 +214,7 @@ export default function LeaderboardClient({
                   : "border-[color:var(--border)] text-[color:var(--muted)]",
               )}
             >
-              {isSelected ? "✓" : "+"}
+              {isSelected ? "x" : "+"}
             </button>
           );
         },
@@ -400,7 +400,7 @@ export default function LeaderboardClient({
             </div>
           </div>
           <div className="text-xs text-[color:var(--muted)]">
-            Data version {DATA_VERSION} · Suite {suiteId}
+            Data version {DATA_VERSION} - Suite {suiteId}
           </div>
         </div>
       </div>
@@ -444,8 +444,8 @@ export default function LeaderboardClient({
                         className="flex items-center gap-2"
                       >
                         {flexRender(header.column.columnDef.header, header.getContext())}
-                        {header.column.getIsSorted() === "asc" && "↑"}
-                        {header.column.getIsSorted() === "desc" && "↓"}
+                        {header.column.getIsSorted() === "asc" && "asc"}
+                        {header.column.getIsSorted() === "desc" && "desc"}
                       </button>
                     )}
                   </th>

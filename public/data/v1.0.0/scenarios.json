@@ -1,0 +1,148 @@
+{
+  "scenarios": [
+    {
+      "scenario_id": "trend_only_linear",
+      "tier": 1,
+      "base_periods": [],
+      "family": "Linear trend only",
+      "tags": [
+        "stationary",
+        "trend-only",
+        "sanity"
+      ],
+      "patterns": [
+        "sanity"
+      ],
+      "description": "Linear trend with no seasonal component and high SNR. Serves as a sanity check for trend recovery.",
+      "stressors": [
+        "no seasonality",
+        "simple trend"
+      ],
+      "default_length": 256,
+      "default_samples": 10,
+      "default_seed": 0
+    },
+    {
+      "scenario_id": "trend_plus_single_sine",
+      "tier": 1,
+      "base_periods": [
+        50
+      ],
+      "family": "Trend + single sine",
+      "tags": [
+        "stationary",
+        "single-period",
+        "sinusoid"
+      ],
+      "patterns": [
+        "fixed period"
+      ],
+      "description": "Polynomial trend with a single sinusoidal seasonal component. A canonical stationary baseline.",
+      "stressors": [
+        "periodic",
+        "smooth trend"
+      ],
+      "default_length": 256,
+      "default_samples": 10,
+      "default_seed": 0
+    },
+    {
+      "scenario_id": "poly_trend_multi_harmonic",
+      "tier": 2,
+      "base_periods": [
+        48
+      ],
+      "family": "Polynomial trend + multi-harmonic",
+      "tags": [
+        "stationary",
+        "multi-harmonic"
+      ],
+      "patterns": [
+        "Pattern III"
+      ],
+      "description": "Higher-order polynomial trend plus multi-harmonic seasonal structure. Tests harmonic separation.",
+      "stressors": [
+        "multi-harmonic",
+        "polynomial trend"
+      ],
+      "default_length": 256,
+      "default_samples": 10,
+      "default_seed": 0
+    },
+    {
+      "scenario_id": "logistic_trend_multi_seasonal",
+      "tier": 2,
+      "base_periods": [
+        24,
+        168
+      ],
+      "family": "Logistic trend + multi-seasonal",
+      "tags": [
+        "stationary",
+        "multi-seasonal",
+        "logistic"
+      ],
+      "patterns": [
+        "Pattern III"
+      ],
+      "description": "Logistic growth trend with multiple seasonal periods. Tests multi-seasonal recovery.",
+      "stressors": [
+        "multi-seasonal",
+        "smooth nonlinear trend"
+      ],
+      "default_length": 256,
+      "default_samples": 10,
+      "default_seed": 0
+    },
+    {
+      "scenario_id": "rw_trend_freq_drifting_cycle",
+      "tier": 3,
+      "base_periods": [
+        50
+      ],
+      "family": "Random walk trend + frequency drift",
+      "tags": [
+        "nonstationary",
+        "frequency drift",
+        "random walk"
+      ],
+      "patterns": [
+        "Pattern I"
+      ],
+      "description": "Random-walk trend with a drifting-frequency cycle. Stresses fixed-period assumptions.",
+      "stressors": [
+        "frequency drift",
+        "random walk trend"
+      ],
+      "default_length": 256,
+      "default_samples": 10,
+      "default_seed": 0
+    },
+    {
+      "scenario_id": "piecewise_trend_regime_cycle_with_events",
+      "tier": 3,
+      "base_periods": [
+        40,
+        65
+      ],
+      "family": "Piecewise trend + regime cycle + events",
+      "tags": [
+        "nonstationary",
+        "regime switch",
+        "events"
+      ],
+      "patterns": [
+        "Pattern II"
+      ],
+      "description": "Piecewise trend with regime-switching cycles and sparse events. Highlights discontinuities.",
+      "stressors": [
+        "regime switch",
+        "events",
+        "piecewise trend"
+      ],
+      "default_length": 256,
+      "default_samples": 10,
+      "default_seed": 0
+    }
+  ]
+}

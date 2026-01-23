@@ -15,7 +15,7 @@ export default async function ScenarioDetailPage({ params }: ScenarioPageProps) 
   const [scenarios, suites, leaderboard, methods] = await Promise.all([
     getScenarios(),
     getSuites(),
-    getLeaderboard("full"),
+    getLeaderboard("core"),
     getMethods(),
   ]);
 
@@ -64,7 +64,7 @@ export default async function ScenarioDetailPage({ params }: ScenarioPageProps) 
                 Tier {scenario.tier}
               </span>
               <span className="rounded-full border border-[color:var(--border)] px-3 py-1">
-                Base periods: {scenario.base_periods.join(", ")}
+                Base periods: {scenario.base_periods.length ? scenario.base_periods.join(", ") : "none"}
               </span>
               <span className="rounded-full border border-[color:var(--border)] px-3 py-1">
                 Suite: {suiteForScenario.suite_id.toUpperCase()}
@@ -100,7 +100,7 @@ export default async function ScenarioDetailPage({ params }: ScenarioPageProps) 
                 <div>
                   <p className="font-semibold">{method.display_name}</p>
                   <p className="text-xs text-[color:var(--muted)]">
-                    spectral {method.spectral.toFixed(3)} · max-lag {method.maxlag.toFixed(3)}
+                    spectral {method.spectral.toFixed(3)} - max-lag {method.maxlag.toFixed(3)}
                   </p>
                 </div>
                 <span className="text-xs font-semibold text-[color:var(--accent-strong)]">

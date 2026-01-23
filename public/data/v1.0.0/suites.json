@@ -1,0 +1,59 @@
+{
+  "suite_version": "v1.0.0",
+  "suites": [
+    {
+      "suite_id": "core",
+      "name": "Core suite",
+      "scenario_ids": [
+        "trend_only_linear",
+        "trend_plus_single_sine",
+        "poly_trend_multi_harmonic",
+        "logistic_trend_multi_seasonal",
+        "rw_trend_freq_drifting_cycle",
+        "piecewise_trend_regime_cycle_with_events"
+      ],
+      "description": "Core benchmark scenarios covering stationary, multi-seasonal, and nonstationary stress cases."
+    },
+    {
+      "suite_id": "full",
+      "name": "Full suite",
+      "scenario_ids": [
+        "trend_only_linear",
+        "trend_plus_single_sine",
+        "poly_trend_multi_harmonic",
+        "logistic_trend_multi_seasonal",
+        "rw_trend_freq_drifting_cycle",
+        "piecewise_trend_regime_cycle_with_events"
+      ],
+      "description": "Extended suite (v1.0.0 currently matches core for public results)."
+    }
+  ],
+  "tiers": {
+    "trend_only_linear": 1,
+    "trend_plus_single_sine": 1,
+    "poly_trend_multi_harmonic": 2,
+    "logistic_trend_multi_seasonal": 2,
+    "rw_trend_freq_drifting_cycle": 3,
+    "piecewise_trend_regime_cycle_with_events": 3
+  },
+  "scenario_periods": {
+    "trend_only_linear": [],
+    "trend_plus_single_sine": [
+      50
+    ],
+    "poly_trend_multi_harmonic": [
+      48
+    ],
+    "logistic_trend_multi_seasonal": [
+      24,
+      168
+    ],
+    "rw_trend_freq_drifting_cycle": [
+      50
+    ],
+    "piecewise_trend_regime_cycle_with_events": [
+      40,
+      65
+    ]
+  }
+}

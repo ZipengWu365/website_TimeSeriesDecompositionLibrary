@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getLeaderboard, getMethods } from "@/lib/data";
+import { BASE_PATH } from "@/lib/constants";
+import { METHOD_DETAILS } from "@/lib/method-details";
 
 type MethodPageProps = {
   params: { id: string };
@@ -12,13 +14,14 @@ export async function generateStaticParams() {
 }
 
 export default async function MethodDetailPage({ params }: MethodPageProps) {
-  const [methods, leaderboard] = await Promise.all([getMethods(), getLeaderboard("full")]);
+  const [methods, leaderboard] = await Promise.all([getMethods(), getLeaderboard("core")]);
   const method = methods.methods.find((item) => item.method_name === params.id);
   if (!method) {
     notFound();
   }
 
   const rows = leaderboard.rows.filter((row) => row.method_name === method.method_name);
+  const detail = METHOD_DETAILS[method.method_name];
   const tierStats = [1, 2, 3].map((tier) => {
     const tierRows = rows.filter((row) => row.tier === tier);
     if (!tierRows.length) {
@@ -125,6 +128,75 @@ export default async function MethodDetailPage({ params }: MethodPageProps) {
           </div>
         </div>
       </section>
+
+      {detail && (
+        <section className="mt-10 grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+          <div className="rounded-3xl border border-[color:var(--border)] bg-white/90 p-6 shadow-[var(--shadow)]">
+            <h2 className="text-xl font-semibold">Mathematical formulation</h2>
+            <p className="mt-3 text-sm text-[color:var(--muted)]">{detail.overview}</p>
+            <div className="mt-4 space-y-4">
+              {detail.equations.map((equation) => (
+                <div key={equation.title} className="rounded-2xl border border-[color:var(--border)] p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)]">
+                    {equation.title}
+                  </p>
+                  <pre className="mt-2 whitespace-pre-wrap rounded-xl bg-[color:var(--ink)]/95 p-3 text-xs text-white">
+                    {equation.latex}
+                  </pre>
+                </div>
+              ))}
+            </div>
+            {detail.notes?.length ? (
+              <div className="mt-4 rounded-2xl border border-[color:var(--border)] bg-[color:var(--bg)]/70 p-4 text-xs text-[color:var(--muted)]">
+                <p className="font-semibold text-[color:var(--ink)]">Notes</p>
+                <ul className="mt-2 space-y-1">
+                  {detail.notes.map((note) => (
+                    <li key={note}>{note}</li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+          </div>
+          <div className="rounded-3xl border border-[color:var(--border)] bg-white/90 p-6 shadow-[var(--shadow)]">
+            <h2 className="text-xl font-semibold">Implementation highlights</h2>
+            <div className="mt-4 space-y-4">
+              {detail.code.map((block) => (
+                <div key={block.title}>
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)]">
+                    {block.title}
+                  </p>
+                  <pre className="mt-2 whitespace-pre-wrap rounded-2xl bg-[color:var(--ink)]/95 p-4 text-xs text-white">
+                    {block.code}
+                  </pre>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {detail?.figures?.length ? (
+        <section className="mt-10">
+          <h2 className="text-xl font-semibold">Figures</h2>
+          <div className="mt-4 grid gap-6 md:grid-cols-2">
+            {detail.figures.map((figure) => (
+              <figure
+                key={figure.src}
+                className="rounded-3xl border border-[color:var(--border)] bg-white/90 p-4 shadow-[var(--shadow)]"
+              >
+                <img
+                  src={`${BASE_PATH}${figure.src}`}
+                  alt={figure.caption}
+                  className="h-auto w-full rounded-2xl border border-[color:var(--border)]"
+                />
+                <figcaption className="mt-3 text-xs text-[color:var(--muted)]">
+                  {figure.caption}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+      ) : null}
     </div>
   );
 }

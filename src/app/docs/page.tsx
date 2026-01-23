@@ -1,6 +1,49 @@
 import Link from "next/link";
+import { BASE_PATH } from "@/lib/constants";
 
 export default function DocsPage() {
+  const figures = [
+    {
+      src: "/figs/fig01_decomposition_problem_1766848017819.png",
+      caption: "Decomposition task definition and component alignment.",
+    },
+    {
+      src: "/figs/fig02_method_comparison_1766848048180.png",
+      caption: "Method overview by implicit priors.",
+    },
+    {
+      src: "/figs/fig06_synthetic_data_1766848210813.png",
+      caption: "Synthetic data generation taxonomy.",
+    },
+    {
+      src: "/figs/fig09_heatmap_1766848349088.png",
+      caption: "Method-scenario performance heatmap (trend/season).",
+    },
+    {
+      src: "/figs/decomp_compare_logistic_trend_multi_seasonal.png",
+      caption: "Decomposition comparison: logistic trend + multi-seasonal.",
+    },
+    {
+      src: "/figs/decomp_compare_rw_trend_freq_drifting_cycle.png",
+      caption: "Decomposition comparison: random walk + drifting cycle.",
+    },
+    {
+      src: "/figs/decomp_compare_piecewise_trend_regime_cycle_with_events.png",
+      caption: "Decomposition comparison: piecewise trend + regime cycle.",
+    },
+    {
+      src: "/figs/heatmap_T_r2.png",
+      caption: "Trend R2 heatmap by scenario.",
+    },
+    {
+      src: "/figs/heatmap_S_spectral_corr.png",
+      caption: "Seasonal spectral correlation heatmap.",
+    },
+    {
+      src: "/figs/heatmap_S_maxlag_corr.png",
+      caption: "Seasonal max-lag correlation heatmap.",
+    },
+  ];
   return (
     <div className="mx-auto w-full max-w-6xl px-6 pb-20 pt-12">
       <div className="space-y-2">
@@ -129,6 +172,35 @@ python -m tsdecomp export \\
               .
             </p>
           </article>
+        </div>
+      </section>
+
+      <section className="mt-12 space-y-4">
+        <div className="space-y-2">
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[color:var(--muted)]">
+            Figures
+          </p>
+          <h2 className="text-2xl font-semibold">Benchmark visuals</h2>
+          <p className="text-sm text-[color:var(--muted)]">
+            Key diagrams and result snapshots used across the benchmark narrative.
+          </p>
+        </div>
+        <div className="grid gap-6 md:grid-cols-2">
+          {figures.map((figure) => (
+            <figure
+              key={figure.src}
+              className="rounded-3xl border border-[color:var(--border)] bg-white/90 p-4 shadow-[var(--shadow)]"
+            >
+              <img
+                src={`${BASE_PATH}${figure.src}`}
+                alt={figure.caption}
+                className="h-auto w-full rounded-2xl border border-[color:var(--border)]"
+              />
+              <figcaption className="mt-3 text-xs text-[color:var(--muted)]">
+                {figure.caption}
+              </figcaption>
+            </figure>
+          ))}
         </div>
       </section>
     </div>

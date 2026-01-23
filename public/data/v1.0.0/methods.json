@@ -1,0 +1,250 @@
+{
+  "methods": [
+    {
+      "method_name": "MA_BASELINE",
+      "display_name": "MA baseline",
+      "reference": "Centered moving average baseline.",
+      "needs_period": false,
+      "default_config": {
+        "trend_window": 13,
+        "season_period": 50
+      },
+      "wrapper_path": "tsdecomp/methods/ma_baseline.py",
+      "expected_strengths": [
+        "fast baseline",
+        "smooth trend",
+        "stable periodicity"
+      ],
+      "known_signatures": [
+        "blurs abrupt changes",
+        "drift sensitivity"
+      ]
+    },
+    {
+      "method_name": "STL",
+      "display_name": "STL",
+      "reference": "Cleveland et al. (1990).",
+      "needs_period": true,
+      "default_config": {
+        "period": 50
+      },
+      "wrapper_path": "tsdecomp/methods/stl.py",
+      "expected_strengths": [
+        "stationary seasonality",
+        "smooth trend"
+      ],
+      "known_signatures": [
+        "frequency drift failure",
+        "phase mismatch"
+      ]
+    },
+    {
+      "method_name": "MSTL",
+      "display_name": "MSTL",
+      "reference": "Bandara et al. (2021).",
+      "needs_period": true,
+      "default_config": {
+        "periods": [
+          24,
+          168
+        ]
+      },
+      "wrapper_path": "tsdecomp/methods/stl.py",
+      "expected_strengths": [
+        "multi-seasonal cycles",
+        "smooth trend"
+      ],
+      "known_signatures": [
+        "period misspecification",
+        "drift sensitivity"
+      ]
+    },
+    {
+      "method_name": "ROBUSTSTL",
+      "display_name": "Robust STL",
+      "reference": "Cleveland et al. (1990), robust mode.",
+      "needs_period": true,
+      "default_config": {
+        "period": 50,
+        "robust": true
+      },
+      "wrapper_path": "tsdecomp/methods/stl.py",
+      "expected_strengths": [
+        "outlier resistance",
+        "stationary seasonality"
+      ],
+      "known_signatures": [
+        "frequency drift failure"
+      ]
+    },
+    {
+      "method_name": "SSA",
+      "display_name": "SSA",
+      "reference": "Golyandina et al. (2001).",
+      "needs_period": false,
+      "default_config": {
+        "window": 64,
+        "rank": 10
+      },
+      "wrapper_path": "tsdecomp/methods/ssa.py",
+      "expected_strengths": [
+        "multi-harmonic separation",
+        "low-rank structure"
+      ],
+      "known_signatures": [
+        "window sensitivity",
+        "regime leakage"
+      ]
+    },
+    {
+      "method_name": "EMD",
+      "display_name": "EMD",
+      "reference": "Huang et al. (1998).",
+      "needs_period": false,
+      "default_config": {
+        "n_imfs": 8
+      },
+      "wrapper_path": "tsdecomp/methods/emd.py",
+      "expected_strengths": [
+        "adaptive oscillations",
+        "nonstationary cycles"
+      ],
+      "known_signatures": [
+        "mode mixing",
+        "sifting sensitivity"
+      ]
+    },
+    {
+      "method_name": "CEEMDAN",
+      "display_name": "CEEMDAN",
+      "reference": "Torres et al. (2011).",
+      "needs_period": false,
+      "default_config": {
+        "trials": 50,
+        "noise_width": 0.2
+      },
+      "wrapper_path": "tsdecomp/methods/ceemdan.py",
+      "expected_strengths": [
+        "noise-assisted separation",
+        "nonstationary cycles"
+      ],
+      "known_signatures": [
+        "noise budget tuning"
+      ]
+    },
+    {
+      "method_name": "VMD",
+      "display_name": "VMD",
+      "reference": "Dragomiretskiy & Zosso (2014).",
+      "needs_period": false,
+      "default_config": {
+        "K": 5,
+        "alpha": 2000.0
+      },
+      "wrapper_path": "tsdecomp/methods/vmd.py",
+      "expected_strengths": [
+        "narrow-band modes",
+        "frequency drift robustness"
+      ],
+      "known_signatures": [
+        "mode count sensitivity",
+        "band overlap"
+      ]
+    },
+    {
+      "method_name": "WAVELET",
+      "display_name": "Wavelet",
+      "reference": "Mallat (1989).",
+      "needs_period": false,
+      "default_config": {
+        "wavelet": "db4",
+        "level": 4
+      },
+      "wrapper_path": "tsdecomp/methods/wavelet.py",
+      "expected_strengths": [
+        "multiscale structure",
+        "transient localization"
+      ],
+      "known_signatures": [
+        "boundary artifacts",
+        "level tuning"
+      ]
+    },
+    {
+      "method_name": "GABOR_BANDS",
+      "display_name": "Gabor bands",
+      "reference": "STFT bandpass decomposition.",
+      "needs_period": false,
+      "default_config": {
+        "win_len": 256,
+        "hop": 64
+      },
+      "wrapper_path": "synthetic_ts_bench/decomp_methods.py",
+      "expected_strengths": [
+        "time-frequency bands",
+        "event isolation"
+      ],
+      "known_signatures": [
+        "band leakage",
+        "window sensitivity"
+      ]
+    },
+    {
+      "method_name": "GABOR_RIDGE",
+      "display_name": "Gabor ridge",
+      "reference": "STFT ridge tracking.",
+      "needs_period": false,
+      "default_config": {
+        "win_len": 256,
+        "hop": 64,
+        "ridge": true
+      },
+      "wrapper_path": "synthetic_ts_bench/decomp_methods.py",
+      "expected_strengths": [
+        "chirp tracking",
+        "dominant ridge"
+      ],
+      "known_signatures": [
+        "ridge gaps",
+        "trend leakage"
+      ]
+    },
+    {
+      "method_name": "GABOR_CLUSTER",
+      "display_name": "Gabor cluster",
+      "reference": "Gabor atoms clustered in time-frequency space.",
+      "needs_period": false,
+      "default_config": {
+        "n_clusters": 8,
+        "max_clusters": 8
+      },
+      "wrapper_path": "tsdecomp/methods/gabor_cluster.py",
+      "expected_strengths": [
+        "learned atoms",
+        "sparse recon"
+      ],
+      "known_signatures": [
+        "model dependence",
+        "cluster mismatch"
+      ]
+    },
+    {
+      "method_name": "STD",
+      "display_name": "STD",
+      "reference": "Multi-scale basis (placeholder wrapper).",
+      "needs_period": false,
+      "default_config": {
+        "mode": "STD_MULTI"
+      },
+      "wrapper_path": "tsdecomp/methods/std_multi.py",
+      "expected_strengths": [
+        "multi-scale bases",
+        "structured decomposition"
+      ],
+      "known_signatures": [
+        "basis mismatch",
+        "fallback to SSA"
+      ]
+    }
+  ]
+}

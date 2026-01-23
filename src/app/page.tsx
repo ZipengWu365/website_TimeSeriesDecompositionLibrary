@@ -123,9 +123,9 @@ python -m tsdecomp export \\
           <div className="rounded-3xl border border-[color:var(--border)] bg-white/80 p-6 shadow-[var(--shadow)]">
             <h3 className="text-lg font-semibold">Changelog</h3>
             <ul className="mt-3 space-y-2 text-sm text-[color:var(--muted)]">
-              <li>v0.0.0 · Initial core + full suite scaffolding.</li>
-              <li>v0.1.0 · Adds diagnostics for regime switching scenarios.</li>
-              <li>v0.2.0 · Planned: artifact export + seed replay bundles.</li>
+              <li>v0.0.0 - Initial core + full suite scaffolding.</li>
+              <li>v0.1.0 - Adds diagnostics for regime switching scenarios.</li>
+              <li>v0.2.0 - Planned: artifact export + seed replay bundles.</li>
             </ul>
           </div>
         </div>
