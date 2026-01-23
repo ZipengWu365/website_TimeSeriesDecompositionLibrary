@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { FigureCard } from "@/components/figure-card";
+import { BASE_PATH } from "@/lib/constants";
 
 const flowchartFigure = {
   src: "/figs/fig10_flowchart_1766848383670.png",
@@ -296,19 +297,19 @@ export default function ExperimentsPage() {
           {[
             {
               label: "Seasonal-Trend-Dispersion Decomposition",
-              href: "/resources/STD_A_Seasonal-Trend-Dispersion_Decomposition_of_Time_Series.pdf",
+              href: `${BASE_PATH}/resources/STD_A_Seasonal-Trend-Dispersion_Decomposition_of_Time_Series.pdf`,
             },
             {
               label: "Latent seasonal-trend representations (NeurIPS 2022)",
-              href: "/resources/NeurIPS-2022-learning-latent-seasonal-trend-representations-for-time-series-forecasting-Paper-Conference.pdf",
+              href: `${BASE_PATH}/resources/NeurIPS-2022-learning-latent-seasonal-trend-representations-for-time-series-forecasting-Paper-Conference.pdf`,
             },
             {
               label: "Reference: 2405.14616v1",
-              href: "/resources/2405.14616v1.pdf",
+              href: `${BASE_PATH}/resources/2405.14616v1.pdf`,
             },
             {
               label: "Decomposition method analysis report (PDF)",
-              href: "/resources/decomposition_method_analysis.pdf",
+              href: `${BASE_PATH}/resources/decomposition_method_analysis.pdf`,
             },
           ].map((item) => (
             <a
