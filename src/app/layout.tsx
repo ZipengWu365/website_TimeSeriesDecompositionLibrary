@@ -21,9 +21,9 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "TSDecomp Benchmark",
+  title: "TSComp Benchmark",
   description:
-    "Component recovery benchmark for interpretable time-series decomposition.",
+    "TSComp benchmark for interpretable time-series component recovery, powered by tsdecomp.",
 };
 
 export default function RootLayout({

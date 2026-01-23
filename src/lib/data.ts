@@ -8,6 +8,8 @@ import {
   LeaderboardFileSchema,
   MethodsFile,
   MethodsFileSchema,
+  ApiReferenceFile,
+  ApiReferenceFileSchema,
   ScenariosFile,
   ScenariosFileSchema,
   SuitesFile,
@@ -40,4 +42,9 @@ export const getLeaderboard = cache(async (suiteId: "core" | "full"): Promise<Le
   const filename = suiteId === "core" ? "leaderboard_core.json" : "leaderboard_full.json";
   const payload = await readJson<LeaderboardFile>(filename);
   return LeaderboardFileSchema.parse(payload);
+});
+
+export const getApiReference = cache(async (): Promise<ApiReferenceFile> => {
+  const payload = await readJson<ApiReferenceFile>("api_reference.json");
+  return ApiReferenceFileSchema.parse(payload);
 });

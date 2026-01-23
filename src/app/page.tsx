@@ -6,15 +6,15 @@ export default function Home() {
       <section className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="space-y-6">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[color:var(--muted)]">
-            Interpretable time-series decomposition benchmark
+            TSComp benchmark for interpretable time-series decomposition
           </p>
           <h1 className="text-4xl font-semibold leading-tight md:text-5xl">
             Benchmark component recovery, not just forecasting error.
           </h1>
           <p className="text-lg text-[color:var(--muted)]">
-            TSDecomp stress-tests trend, seasonal, and residual recovery across drift,
-            regimes, and events. The leaderboard is tier-wise by default so diagnostic
-            behavior is visible and reproducible.
+            TSComp stress-tests trend, seasonal, and residual recovery across drift,
+            regimes, and events. The toolkit is powered by tsdecomp so diagnostics stay
+            reproducible and tier-wise.
           </p>
           <div className="flex flex-wrap gap-4">
             <Link
@@ -59,13 +59,40 @@ export default function Home() {
           <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[color:var(--muted)]">
             Quickstart
           </p>
-          <h2 className="mt-3 text-2xl font-semibold">Run core suite in one shot</h2>
-          <pre className="mt-4 whitespace-pre-wrap rounded-2xl bg-[color:var(--ink)]/95 p-4 text-xs text-white">
+          <h2 className="mt-3 text-2xl font-semibold">Run the core suite fast</h2>
+          <p className="mt-2 text-sm text-[color:var(--muted)]">
+            Start with a 60-second smoke run, then switch to the official settings for
+            leaderboard snapshots.
+          </p>
+          <div className="mt-4 space-y-4">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)]">
+                Smoke run (fast)
+              </p>
+              <pre className="mt-2 whitespace-pre-wrap rounded-2xl bg-[color:var(--ink)]/95 p-4 text-xs text-white">
 {`pip install -e .
 
 python -m tsdecomp suite_run \\
   --suite core \\
-  --methods stl,mstl,robust_stl \\
+  --methods stl,ssa \\
+  --seed 0 \\
+  --n_samples 3 \\
+  --length 256
+
+python -m tsdecomp export \\
+  --in runs/ \\
+  --format leaderboard_csv \\
+  --out_file leaderboard_core.csv`}
+              </pre>
+            </div>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)]">
+                Official core run
+              </p>
+              <pre className="mt-2 whitespace-pre-wrap rounded-2xl bg-[color:var(--ink)]/95 p-4 text-xs text-white">
+{`python -m tsdecomp suite_run \\
+  --suite core \\
+  --methods stl,mstl,robust_stl,ssa,emd,ceemdan,vmd,wavelet \\
   --seed 0 \\
   --n_samples 40 \\
   --length 960
@@ -74,7 +101,9 @@ python -m tsdecomp export \\
   --in runs/ \\
   --format leaderboard_csv \\
   --out_file leaderboard_core.csv`}
-          </pre>
+              </pre>
+            </div>
+          </div>
           <p className="mt-4 text-sm text-[color:var(--muted)]">
             Exported CSV feeds directly into the leaderboard without any extra scripts.
           </p>
@@ -112,8 +141,8 @@ python -m tsdecomp export \\
           <div className="rounded-3xl border border-[color:var(--border)] bg-white/80 p-6 shadow-[var(--shadow)]">
             <h3 className="text-lg font-semibold">How to cite</h3>
             <pre className="mt-3 whitespace-pre-wrap rounded-2xl bg-[#0f1418] p-4 text-xs text-white">
-{`@misc{tsdecomp2026,
-  title={Interpretable Time-Series Decomposition as Component Recovery},
+{`@misc{tscomp2026,
+  title={TSComp: Interpretable Time-Series Decomposition as Component Recovery},
   author={Anonymous Authors},
   year={2026},
   note={Under review.}

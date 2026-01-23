@@ -29,6 +29,16 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Build API reference
+        run: |
+          git clone --depth 1 https://github.com/ZipengWu365/TS-component-structure-Recover-library _tsdecomp
+          python scripts/build_api_reference.py --repo-root _tsdecomp --source-repo https://github.com/ZipengWu365/TS-component-structure-Recover-library
+
       - name: Compute base path
         id: base-path
         shell: bash
@@ -54,6 +64,8 @@ jobs:
           test -f out/.nojekyll
           test -f out/methods/STL/index.html
           test -f out/methods/index.html
+          test -f out/examples/index.html
+          test -f out/api-reference/index.html
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

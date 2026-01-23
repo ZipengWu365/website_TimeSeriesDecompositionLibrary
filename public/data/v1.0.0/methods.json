@@ -4,7 +4,7 @@
       "method_name": "MA_BASELINE",
       "display_name": "Moving Average",
       "reference": "Moving average baseline (trend + seasonal indices).",
-      "needs_period": false,
+      "needs_period": true,
       "default_config": {
         "trend_window": 13,
         "season_period": 50

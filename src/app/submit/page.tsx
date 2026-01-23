@@ -18,13 +18,49 @@ export default function SubmitPage() {
         <div className="space-y-6">
           <article className="rounded-3xl border border-[color:var(--border)] bg-white/90 p-6 shadow-[var(--shadow)]">
             <h2 className="text-xl font-semibold">Submission steps</h2>
-            <ol className="mt-4 space-y-3 text-sm text-[color:var(--muted)]">
-              <li>1) Fork the repo and add a wrapper under <code>tsdecomp/methods/</code>.</li>
-              <li>2) Run <code>python -m tsdecomp validate --suite core</code>.</li>
-              <li>3) Run <code>python -m tsdecomp suite_run --suite core --methods your_method</code>.</li>
-              <li>4) Export CSV via <code>python -m tsdecomp export --in runs/ --format leaderboard_csv --out_file leaderboard.csv</code>.</li>
-              <li>5) Add <code>submissions/your_method/vX.Y.Z/leaderboard.csv</code> and open a PR.</li>
-            </ol>
+            <div className="mt-4 space-y-3 text-sm text-[color:var(--muted)]">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)]">
+                  Step 1
+                </p>
+                <p className="mt-1">
+                  Fork the repo and add a wrapper under <code>tsdecomp/methods/</code>.
+                </p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)]">
+                  Step 2
+                </p>
+                <p className="mt-1">
+                  Run <code>python -m tsdecomp validate --suite core</code>.
+                </p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)]">
+                  Step 3
+                </p>
+                <p className="mt-1">
+                  Run <code>python -m tsdecomp suite_run --suite core --methods your_method</code>.
+                </p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)]">
+                  Step 4
+                </p>
+                <p className="mt-1">
+                  Export CSV via{" "}
+                  <code>python -m tsdecomp export --in runs/ --format leaderboard_csv --out_file leaderboard.csv</code>.
+                </p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)]">
+                  Step 5
+                </p>
+                <p className="mt-1">
+                  Add <code>submissions/your_method/vX.Y.Z/leaderboard.csv</code> and open a PR.
+                </p>
+              </div>
+            </div>
           </article>
 
           <article className="rounded-3xl border border-[color:var(--border)] bg-white/90 p-6 shadow-[var(--shadow)]">
@@ -46,13 +82,13 @@ export default function SubmitPage() {
         <div className="space-y-6">
           <article className="rounded-3xl border border-[color:var(--border)] bg-white/90 p-6 shadow-[var(--shadow)]">
             <h2 className="text-xl font-semibold">CI validation</h2>
-            <ul className="mt-4 space-y-2 text-sm text-[color:var(--muted)]">
-              <li>Schema compliance + required fields present.</li>
-              <li>Suite version matches current benchmark tag.</li>
-              <li>Method name is snake_case and registered in registry.</li>
-              <li>Deterministic rerun on a random subset of scenarios.</li>
-              <li>Period injection verified (no hidden leakage).</li>
-            </ul>
+            <div className="mt-4 space-y-3 text-sm text-[color:var(--muted)]">
+              <div>Schema compliance + required fields present.</div>
+              <div>Suite version matches current benchmark tag.</div>
+              <div>Method name is snake_case and registered in registry.</div>
+              <div>Deterministic rerun on a random subset of scenarios.</div>
+              <div>Period injection verified (no hidden leakage).</div>
+            </div>
           </article>
 
           <article className="rounded-3xl border border-[color:var(--border)] bg-white/90 p-6 shadow-[var(--shadow)]">

@@ -13,10 +13,11 @@ export function SiteFooter() {
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-6 py-10 md:flex-row md:items-center md:justify-between">
         <div className="space-y-2">
           <p className="text-xs uppercase tracking-[0.2em] text-[color:var(--muted)]">
-            Interpretable Time-Series Decomposition
+            TSComp Benchmark
           </p>
           <p className="text-sm text-[color:var(--muted)]">
             Component recovery benchmark for trend, seasonal, and residual diagnostics.
+            Toolkit: tsdecomp.
           </p>
         </div>
         <div className="flex flex-wrap gap-4 text-sm font-semibold text-[color:var(--muted)]">

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { BASE_PATH, DATA_VERSION } from "@/lib/constants";
 import { METHOD_DETAILS } from "@/lib/method-details";
+import { MathBlock } from "@/components/math-block";
 import {
   LeaderboardFile,
   LeaderboardFileSchema,
@@ -239,13 +240,14 @@ export default function MethodDetailClient() {
             <p className="mt-3 text-sm text-[color:var(--muted)]">{detail.overview}</p>
             <div className="mt-4 space-y-4">
               {detail.equations.map((equation) => (
-                <div key={equation.title} className="rounded-2xl border border-[color:var(--border)] p-4">
+                <div
+                  key={equation.title}
+                  className="rounded-2xl border border-[color:var(--border)] p-4"
+                >
                   <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)]">
                     {equation.title}
                   </p>
-                  <pre className="mt-2 whitespace-pre-wrap rounded-xl bg-[color:var(--ink)]/95 p-3 text-xs text-white">
-                    {equation.latex}
-                  </pre>
+                  <MathBlock latex={equation.latex} className="mt-2" />
                 </div>
               ))}
             </div>

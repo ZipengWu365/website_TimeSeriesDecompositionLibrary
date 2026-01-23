@@ -19,7 +19,8 @@ type AggregateRow = {
   display_name: string;
   needs_period: boolean;
   method_config_json: string;
-  scenario_count: number;
+  coverage_count: number;
+  coverage_total: number;
   row_count: number;
   metric_T_r2: number;
   metric_T_dtw: number;
@@ -89,6 +90,7 @@ export default function LeaderboardClient({
   }, [suiteId]);
 
   const suite = suites.suites.find((item) => item.suite_id === suiteId);
+  const suiteScenarioCount = suite?.scenario_ids.length ?? 0;
   const scenarioMap = useMemo(
     () => new Map(scenarios.map((scenario) => [scenario.scenario_id, scenario])),
     [scenarios],
@@ -113,6 +115,16 @@ export default function LeaderboardClient({
       return true;
     });
   }, [leaderboards, suiteId, tier, scenarioFilter, search]);
+
+  const coverageByMethod = useMemo(() => {
+    const map = new Map<string, Set<string>>();
+    for (const row of leaderboards[suiteId].rows) {
+      const current = map.get(row.method_name) ?? new Set<string>();
+      current.add(row.scenario_id);
+      map.set(row.method_name, current);
+    }
+    return new Map(Array.from(map.entries(), ([method, scenariosSet]) => [method, scenariosSet.size]));
+  }, [leaderboards, suiteId]);
 
   const aggregates = useMemo<AggregateRow[]>(() => {
     const grouped = new Map<
@@ -166,7 +178,8 @@ export default function LeaderboardClient({
         display_name: meta?.display_name ?? methodName,
         needs_period: meta?.needs_period ?? false,
         method_config_json: sums.method_config_json,
-        scenario_count: sums.scenario_ids.size,
+        coverage_count: coverageByMethod.get(methodName) ?? sums.scenario_ids.size,
+        coverage_total: suiteScenarioCount,
         row_count: sums.row_count,
         metric_T_r2,
         metric_T_dtw,
@@ -178,7 +191,7 @@ export default function LeaderboardClient({
         overall_score,
       };
     });
-  }, [filteredRows, methodMap]);
+  }, [filteredRows, methodMap, coverageByMethod, suiteScenarioCount]);
 
   const selectedRows = useMemo(
     () => aggregates.filter((row) => selectedMethods.includes(row.method_name)),
@@ -234,7 +247,11 @@ export default function LeaderboardClient({
               <span className="rounded-full border border-[color:var(--border)] px-2 py-0.5">
                 {row.original.needs_period ? "needs period" : "period-free"}
               </span>
-              <span>{row.original.scenario_count} scenarios</span>
+              <span>
+                {row.original.coverage_total > 0
+                  ? `coverage: ${row.original.coverage_count}/${row.original.coverage_total} scenarios (${suiteId})`
+                  : `coverage: ${row.original.coverage_count} scenarios`}
+              </span>
             </div>
           </div>
         ),
@@ -290,7 +307,7 @@ export default function LeaderboardClient({
         ),
       },
     ],
-    [selectedMethods],
+    [selectedMethods, suiteId],
   );
 
   const table = useReactTable({
@@ -563,7 +580,9 @@ function CompareDrawer({
             <div className="flex items-center justify-between">
               <p className="text-sm font-semibold">{row.display_name}</p>
               <span className="text-xs text-[color:var(--muted)]">
-                {row.scenario_count} scenarios
+                {row.coverage_total > 0
+                  ? `${row.coverage_count}/${row.coverage_total} scenarios`
+                  : `${row.coverage_count} scenarios`}
               </span>
             </div>
             <div className="mt-3 space-y-2 text-xs text-[color:var(--muted)]">

@@ -6,8 +6,11 @@ const NAV_ITEMS = [
   { href: "/leaderboard", label: "Leaderboard" },
   { href: "/scenarios", label: "Scenarios" },
   { href: "/methods", label: "Methods" },
+  { href: "/examples", label: "Examples" },
   { href: "/docs", label: "Docs" },
+  { href: "/api-reference", label: "API Reference" },
   { href: "/submit", label: "Submit" },
+  { href: "/studio", label: "Studio" },
 ];
 
 export function SiteHeader() {
@@ -15,9 +18,14 @@ export function SiteHeader() {
     <header className="sticky top-0 z-20 border-b border-[color:var(--border)] bg-white/70 backdrop-blur">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4">
         <div className="flex items-center gap-3">
-          <Link href="/" className="text-lg font-semibold uppercase tracking-[0.18em]">
-            TSDecomp
-          </Link>
+          <div className="flex flex-col leading-none">
+            <Link href="/" className="text-lg font-semibold uppercase tracking-[0.18em]">
+              TSComp
+            </Link>
+            <span className="mt-1 text-[10px] uppercase tracking-[0.2em] text-[color:var(--muted)]">
+              Toolkit: tsdecomp
+            </span>
+          </div>
           <span className="rounded-full border border-[color:var(--border)] px-2 py-1 text-xs uppercase tracking-[0.18em] text-[color:var(--muted)]">
             {DATA_VERSION}
           </span>

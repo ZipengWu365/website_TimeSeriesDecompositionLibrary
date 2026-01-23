@@ -73,6 +73,25 @@ export const LeaderboardFileSchema = z.object({
   rows: z.array(LeaderboardRowSchema),
 });
 
+export const ApiReferenceItemSchema = z.object({
+  name: z.string(),
+  signature: z.string(),
+  docstring: z.string().optional(),
+  source: z.string().optional(),
+});
+
+export const ApiReferenceSectionSchema = z.object({
+  module: z.string(),
+  description: z.string().optional(),
+  items: z.array(ApiReferenceItemSchema),
+});
+
+export const ApiReferenceFileSchema = z.object({
+  generated_at: z.string(),
+  source_repo: z.string().optional(),
+  sections: z.array(ApiReferenceSectionSchema),
+});
+
 export type SuitesFile = z.infer<typeof SuitesFileSchema>;
 export type Scenario = z.infer<typeof ScenarioSchema>;
 export type ScenariosFile = z.infer<typeof ScenariosFileSchema>;
@@ -80,3 +99,4 @@ export type Method = z.infer<typeof MethodSchema>;
 export type MethodsFile = z.infer<typeof MethodsFileSchema>;
 export type LeaderboardRow = z.infer<typeof LeaderboardRowSchema>;
 export type LeaderboardFile = z.infer<typeof LeaderboardFileSchema>;
+export type ApiReferenceFile = z.infer<typeof ApiReferenceFileSchema>;

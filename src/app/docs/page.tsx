@@ -27,11 +27,26 @@ export default function DocsPage() {
               Methods are aligned into a canonical Trend / Seasonal / Residual interface. Periods
               are injected explicitly to ensure fairness for algorithms that require them.
             </p>
-            <ul className="mt-4 space-y-2 text-sm text-[color:var(--muted)]">
-              <li>1) Map native outputs to T/S/R with clear attribution.</li>
-              <li>2) Inject periods from scenario metadata or method config.</li>
-              <li>3) Validate determinism and schema before export.</li>
-            </ul>
+            <div className="mt-4 space-y-3 text-sm text-[color:var(--muted)]">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)]">
+                  Step 1
+                </p>
+                <p className="mt-1">Map native outputs to T/S/R with clear attribution.</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)]">
+                  Step 2
+                </p>
+                <p className="mt-1">Inject periods from scenario metadata or method config.</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)]">
+                  Step 3
+                </p>
+                <p className="mt-1">Validate determinism and schema before export.</p>
+              </div>
+            </div>
           </article>
           <FigureCard
             src="/figs/fig10_flowchart_1766848383670.png"
@@ -141,9 +156,16 @@ export default function DocsPage() {
             <h2 className="text-xl font-semibold">API surface</h2>
             <pre className="mt-3 whitespace-pre-wrap rounded-2xl bg-[color:var(--ink)]/95 p-4 text-xs text-white">
 {`decompose(series, config) -> DecompResult
-DecompositionConfig(periods, seed, length, ...)
-DecompResult(trend, seasonal, residual)`}
+DecompositionConfig(method, params, seed, ...)
+DecompResult(trend, season, residual)`}
             </pre>
+            <p className="mt-3 text-sm text-[color:var(--muted)]">
+              Need full signatures? Open the{" "}
+              <Link href="/api-reference" className="text-[color:var(--accent-strong)]">
+                API Reference
+              </Link>
+              .
+            </p>
           </article>
 
           <article
@@ -157,7 +179,7 @@ DecompResult(trend, seasonal, residual)`}
 python -m tsdecomp suite_run \\
   --suite core \\
   --methods stl,mstl \\
-  --seed 0 --n_samples 40 --length 960
+  --seed 0 --n_samples 3 --length 256
 
 python -m tsdecomp export \\
   --in runs/ \\

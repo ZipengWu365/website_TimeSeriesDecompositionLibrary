@@ -3,10 +3,13 @@ import Link from "next/link";
 const navItems = [
   { href: "/", label: "Home" },
   { href: "/leaderboard", label: "Leaderboard" },
-  { href: "/methods", label: "Methods" },
   { href: "/scenarios", label: "Scenarios" },
-  { href: "/submit", label: "Submit" },
+  { href: "/methods", label: "Methods" },
+  { href: "/examples", label: "Examples" },
   { href: "/docs", label: "Documentation" },
+  { href: "/api-reference", label: "API Reference" },
+  { href: "/submit", label: "Submit" },
+  { href: "/studio", label: "Studio" },
 ];
 
 export function Sidebar() {
