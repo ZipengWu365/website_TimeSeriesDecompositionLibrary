@@ -6,6 +6,8 @@ const NAV_ITEMS = [
   { href: "/leaderboard", label: "Leaderboard" },
   { href: "/scenarios", label: "Scenarios" },
   { href: "/methods", label: "Methods" },
+  { href: "/results", label: "Results" },
+  { href: "/experiments", label: "Experiments" },
   { href: "/docs", label: "Docs" },
   { href: "/submit", label: "Submit" },
 ];

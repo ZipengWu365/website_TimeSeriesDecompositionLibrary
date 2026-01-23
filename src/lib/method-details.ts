@@ -436,4 +436,82 @@ if not _HAS_FASTTIMES:
     ],
     notes: ["The public wrapper is a placeholder until the fasttimes backend is available."],
   },
+  DR_TS_REG: {
+    overview:
+      "Convex-style decomposition with smooth trend, periodic seasonal penalty, and residual regularization.",
+    equations: [
+      {
+        title: "Objective",
+        latex: String.raw`\min_{T,S,R} \sum_t (x_t - T_t - S_t - R_t)^2 + \lambda_T \sum_t (\Delta^2 T_t)^2 + \lambda_S \sum_t (S_t - S_{t-P})^2 + \lambda_R \sum_t R_t^2`,
+      },
+    ],
+    code: [
+      {
+        title: "Regularized solver sketch",
+        language: "python",
+        code: String.raw`# Solve for T, S, R with smoothness and periodic penalties
+# T smoothness: second differences
+# S periodicity: (S_t - S_{t-P})^2
+# R residual: L2 penalty`,
+      },
+    ],
+    assumptions: [
+      "Trend is smooth under second-order differences.",
+      "Seasonality is approximately periodic with period P.",
+    ],
+    notes: ["Planned method from data-driven decomposition v1."],
+  },
+  DR_TS_AE: {
+    overview:
+      "Structured autoencoder with separate trend and seasonal decoders and explicit regularization.",
+    equations: [
+      {
+        title: "Reconstruction loss",
+        latex: String.raw`\mathcal{L}_{rec} = \sum_t (x_t - T_t - S_t - R_t)^2`,
+      },
+      {
+        title: "Regularization",
+        latex: String.raw`\mathcal{L} = \mathcal{L}_{rec} + \alpha_T \sum_t (\Delta^2 T_t)^2 + \alpha_S \sum_t (S_t - S_{t-P})^2`,
+      },
+    ],
+    code: [
+      {
+        title: "Autoencoder structure",
+        language: "python",
+        code: String.raw`# encoder(x) -> z_T, z_S
+# decoder_T(z_T) -> T
+# decoder_S(z_S) -> S
+# optional residual head`,
+      },
+    ],
+    assumptions: [
+      "Network architecture encodes low-frequency trend priors.",
+      "Seasonal branch can model periodic structure with a soft period penalty.",
+    ],
+    notes: ["Planned method from data-driven decomposition v1."],
+  },
+  SL_LIB: {
+    overview:
+      "Library-based decomposition using sparse retrieval over pre-built trend and seasonal bases.",
+    equations: [
+      {
+        title: "Sparse projection",
+        latex: String.raw`\min_c \|x - Bc\|_2^2 + \lambda \|c\|_1`,
+      },
+    ],
+    code: [
+      {
+        title: "Library retrieval sketch",
+        language: "python",
+        code: String.raw`# Retrieve top-k bases with FAISS
+# Solve sparse coefficients per component
+# Reconstruct trend/season from selected bases`,
+      },
+    ],
+    assumptions: [
+      "Library bases span the expected trend/season families.",
+      "Sparse retrieval captures dominant components.",
+    ],
+    notes: ["Planned method with FAISS-based retrieval."],
+  },
 };

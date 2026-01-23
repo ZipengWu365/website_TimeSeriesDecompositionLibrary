@@ -248,6 +248,74 @@
         "model dependence",
         "cluster mismatch"
       ]
+    },
+    {
+      "method_name": "DR_TS_REG",
+      "display_name": "DR-TS-REG",
+      "reference": "Convex trend/seasonal regularization (data-driven plan v1).",
+      "needs_period": true,
+      "default_config": {
+        "lambda_T": 100.0,
+        "lambda_S": 50.0,
+        "lambda_R": 0.1,
+        "period": null
+      },
+      "wrapper_path": "config/decomp_v2.yaml",
+      "expected_strengths": [
+        "smooth trend",
+        "periodic regularization",
+        "interpretable penalties"
+      ],
+      "known_signatures": [
+        "period sensitivity",
+        "hyperparam tuning"
+      ]
+    },
+    {
+      "method_name": "DR_TS_AE",
+      "display_name": "DR-TS-AE",
+      "reference": "Structured autoencoder decomposition (data-driven plan v1).",
+      "needs_period": true,
+      "default_config": {
+        "latent_dim": 16,
+        "hidden_channels": [
+          32,
+          64
+        ],
+        "kernel_size": 7,
+        "alpha_T": 10.0,
+        "alpha_S": 5.0
+      },
+      "wrapper_path": "config/decomp_v2.yaml",
+      "expected_strengths": [
+        "learned priors",
+        "multi-scale patterns"
+      ],
+      "known_signatures": [
+        "training data dependence",
+        "compute heavy"
+      ]
+    },
+    {
+      "method_name": "SL_LIB",
+      "display_name": "SL-LIB",
+      "reference": "Library-based decomposition with sparse retrieval.",
+      "needs_period": false,
+      "default_config": {
+        "library_size": 500,
+        "n_trend_bases": 200,
+        "n_seasonal_bases": 300,
+        "n_candidates": 50
+      },
+      "wrapper_path": "config/decomp_v2.yaml",
+      "expected_strengths": [
+        "fast retrieval",
+        "basis reuse"
+      ],
+      "known_signatures": [
+        "library coverage",
+        "basis mismatch"
+      ]
     }
   ]
 }
