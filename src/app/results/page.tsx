@@ -191,6 +191,21 @@ const srFigures = [
   },
 ];
 
+const reportFigures = [
+  {
+    src: "/figs/final_report/decomp_trend_r2_heatmap.png",
+    caption: "Full report: trend R2 heatmap.",
+  },
+  {
+    src: "/figs/final_report/decomp_trend_r2_heatmap_v2.png",
+    caption: "Full report: trend R2 heatmap (variant).",
+  },
+  {
+    src: "/figs/final_report/decomp_season_r2_heatmap.png",
+    caption: "Full report: seasonal R2 heatmap.",
+  },
+];
+
 export default function ResultsPage() {
   return (
     <div className="mx-auto w-full max-w-6xl px-6 pb-20 pt-12">
@@ -300,6 +315,18 @@ export default function ResultsPage() {
         </p>
         <div className="grid gap-6 md:grid-cols-2">
           {srFigures.map((figure) => (
+            <FigureCard key={figure.src} src={figure.src} caption={figure.caption} />
+          ))}
+        </div>
+      </section>
+
+      <section className="mt-12 space-y-4">
+        <h2 className="text-2xl font-semibold">Full report heatmaps</h2>
+        <p className="text-sm text-[color:var(--muted)]">
+          Additional summary heatmaps from the consolidated report for cross-checking trends.
+        </p>
+        <div className="grid gap-6 md:grid-cols-2">
+          {reportFigures.map((figure) => (
             <FigureCard key={figure.src} src={figure.src} caption={figure.caption} />
           ))}
         </div>
