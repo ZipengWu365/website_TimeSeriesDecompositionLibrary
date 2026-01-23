@@ -2,6 +2,7 @@ import Link from "next/link";
 
 const navItems = [
   { href: "/", label: "Home" },
+  { href: "/user-guide", label: "User Guide" },
   { href: "/leaderboard", label: "Leaderboard" },
   { href: "/scenarios", label: "Scenarios" },
   { href: "/methods", label: "Methods" },
@@ -9,7 +10,6 @@ const navItems = [
   { href: "/docs", label: "Documentation" },
   { href: "/api-reference", label: "API Reference" },
   { href: "/submit", label: "Submit" },
-  { href: "/studio", label: "Studio" },
 ];
 
 export function Sidebar() {

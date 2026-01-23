@@ -1,33 +1,285 @@
 {
-  "generated_at": "2026-01-23 14:26 UTC",
+  "generated_at": "2026-01-23 23:18 UTC",
   "sections": [
     {
-      "module": "tsdecomp.core",
-      "description": "Core dataclasses for configuration and results.",
+      "module": "tsdecomp",
+      "description": "Top-level package exports.",
       "items": [
         {
+          "name": "decompose",
+          "signature": "decompose(series: np.ndarray, config: DecompositionConfig) -> DecompResult",
+          "source": "tsdecomp/registry.py",
+          "docstring": "Main entry point for decomposition. Dispatches to the registered method based on config.method."
+        },
+        {
+          "name": "DecompositionConfig",
+          "signature": "DecompositionConfig(method: str, params: Dict = {}, return_components: List[str] = None, device: str = 'cpu', n_jobs: int = 1, seed: int = 42)",
+          "source": "tsdecomp/core.py",
+          "docstring": "Configuration for a decomposition method. Pydantic model with validation."
+        },
+        {
           "name": "DecompResult",
-          "signature": "DecompResult(trend, season, residual, components=field(default_factory=dict), meta=field(default_factory=dict))",
+          "signature": "@dataclass DecompResult(trend: np.ndarray, season: np.ndarray, residual: np.ndarray, components: Dict = {}, meta: Dict = {})",
           "source": "tsdecomp/core.py",
           "docstring": "Unified container for time-series decomposition results."
         },
         {
-          "name": "DecompositionConfig",
-          "signature": "DecompositionConfig(method, params=Field(default_factory=dict), return_components=None, device='cpu', n_jobs=1, seed=42)",
-          "source": "tsdecomp/core.py",
-          "docstring": "Configuration for a decomposition method."
+          "name": "MethodRegistry",
+          "signature": "class MethodRegistry",
+          "source": "tsdecomp/registry.py",
+          "docstring": "Registry for decomposition methods. Use @MethodRegistry.register(name) to add methods."
         }
       ]
     },
     {
-      "module": "tsdecomp.registry",
-      "description": "Registry entry point and main decomposition call.",
+      "module": "tsdecomp.metrics",
+      "description": "Evaluation metrics for trend and seasonal component recovery.",
       "items": [
         {
-          "name": "decompose",
-          "signature": "decompose(series, config)",
-          "source": "tsdecomp/registry.py",
-          "docstring": "Main entry point for decomposition."
+          "name": "r2_score",
+          "signature": "r2_score(y_true: np.ndarray, y_pred: np.ndarray) -> float",
+          "source": "tsdecomp/metrics.py",
+          "docstring": "R-squared score. Returns 1 - (SS_res / SS_tot)."
+        },
+        {
+          "name": "dtw_distance",
+          "signature": "dtw_distance(s1: np.ndarray, s2: np.ndarray) -> float",
+          "source": "tsdecomp/metrics.py",
+          "docstring": "Dynamic Time Warping distance. Currently uses Euclidean norm as proxy."
+        },
+        {
+          "name": "spectral_correlation",
+          "signature": "spectral_correlation(s1: np.ndarray, s2: np.ndarray, fs: float = 1.0) -> float",
+          "source": "tsdecomp/metrics.py",
+          "docstring": "Correlation of power spectral densities using Welch's method."
+        },
+        {
+          "name": "max_lag_correlation",
+          "signature": "max_lag_correlation(s1: np.ndarray, s2: np.ndarray) -> float",
+          "source": "tsdecomp/metrics.py",
+          "docstring": "Maximum cross-correlation at any lag. Robust to phase shifts."
+        },
+        {
+          "name": "compute_metrics",
+          "signature": "compute_metrics(y_true: np.ndarray, y_pred: np.ndarray, fs: float = 1.0) -> Dict[str, float]",
+          "source": "tsdecomp/metrics.py",
+          "docstring": "Compute all metrics (r2, dtw, spec_corr, max_lag_corr) in one call."
+        }
+      ]
+    },
+    {
+      "module": "tsdecomp.suites",
+      "description": "Benchmark suite definitions and configuration helpers.",
+      "items": [
+        {
+          "name": "SUITES",
+          "signature": "SUITES: Dict[str, List[str]]",
+          "source": "tsdecomp/suites.py",
+          "docstring": "Dictionary mapping suite names (core, full) to scenario IDs."
+        },
+        {
+          "name": "SCENARIO_PERIODS",
+          "signature": "SCENARIO_PERIODS: Dict[str, Any]",
+          "source": "tsdecomp/suites.py",
+          "docstring": "Mapping from scenario IDs to their primary period(s) for auto-injection."
+        },
+        {
+          "name": "SCENARIO_TIER",
+          "signature": "SCENARIO_TIER: Dict[str, int]",
+          "source": "tsdecomp/suites.py",
+          "docstring": "Mapping from scenario IDs to difficulty tiers (1, 2, 3)."
+        },
+        {
+          "name": "get_method_config",
+          "signature": "get_method_config(method_name: str, scenario_name: str) -> Dict[str, Any]",
+          "source": "tsdecomp/suites.py",
+          "docstring": "Get method config with auto-injected period for a scenario."
+        },
+        {
+          "name": "validate_suite_scenarios",
+          "signature": "validate_suite_scenarios(suite_name: str) -> List[str]",
+          "source": "tsdecomp/suites.py",
+          "docstring": "Validate that all scenarios in the suite have tier and period mappings."
+        }
+      ]
+    },
+    {
+      "module": "tsdecomp.leaderboard",
+      "description": "Benchmark execution, export, and validation functions.",
+      "items": [
+        {
+          "name": "run_suite",
+          "signature": "run_suite(suite_name: str, methods: List[str], seed: int = 0, out_dir: str = 'runs/', n_samples: int = 1, length: int = 512, dt: float = 1.0, verbose: bool = True) -> pd.DataFrame",
+          "source": "tsdecomp/leaderboard.py",
+          "docstring": "Run benchmark suite with specified methods. Returns DataFrame of results."
+        },
+        {
+          "name": "export_leaderboard",
+          "signature": "export_leaderboard(in_dir: str, out_file: str = None, format: str = 'leaderboard_csv') -> pd.DataFrame",
+          "source": "tsdecomp/leaderboard.py",
+          "docstring": "Export benchmark results to leaderboard format (CSV or JSON)."
+        },
+        {
+          "name": "validate_suite",
+          "signature": "validate_suite(suite_name: str) -> bool",
+          "source": "tsdecomp/leaderboard.py",
+          "docstring": "Validate suite reproducibility: regeneration, period injection, metrics."
+        }
+      ]
+    },
+    {
+      "module": "synthetic_ts_bench",
+      "description": "Synthetic time series generation and evaluation.",
+      "items": [
+        {
+          "name": "make_scenario",
+          "signature": "make_scenario(name: str, **overrides) -> ScenarioConfig",
+          "source": "synthetic_ts_bench/scenarios.py",
+          "docstring": "Create a scenario configuration by name with optional overrides."
+        },
+        {
+          "name": "generate_series",
+          "signature": "generate_series(config: ScenarioConfig, N: int, seed: int) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]",
+          "source": "synthetic_ts_bench/generator.py",
+          "docstring": "Generate a synthetic series with ground-truth (y, T, S, R)."
+        },
+        {
+          "name": "evaluate_decomposition_on_series",
+          "signature": "evaluate_decomposition_on_series(result: DecompResult, T_true: np.ndarray, S_true: np.ndarray) -> Dict[str, float]",
+          "source": "synthetic_ts_bench/decomp_eval.py",
+          "docstring": "Evaluate decomposition result against ground truth. Returns metric dict."
+        }
+      ]
+    },
+    {
+      "module": "sr_methods",
+      "description": "Symbolic regression method wrappers and base classes.",
+      "items": [
+        {
+          "name": "SymbolicRegressorBase",
+          "signature": "class SymbolicRegressorBase(ABC)",
+          "source": "sr_methods/base.py",
+          "docstring": "Abstract base class for symbolic regression methods. Subclasses implement fit() and predict()."
+        },
+        {
+          "name": "SRResult",
+          "signature": "@dataclass SRResult(expression: str, sympy_expr: Any, params: Dict, r2_score: float, mse: float, complexity: int, runtime_sec: float, converged: bool, all_expressions: List[str], all_scores: List[float], metadata: Dict)",
+          "source": "sr_methods/base.py",
+          "docstring": "Result from a symbolic regression fit. Contains discovered expression and metrics."
+        },
+        {
+          "name": "compute_expression_complexity",
+          "signature": "compute_expression_complexity(expr_str: str) -> int",
+          "source": "sr_methods/base.py",
+          "docstring": "Estimate expression complexity by counting operators and operands."
+        },
+        {
+          "name": "is_symbolic_equivalent",
+          "signature": "is_symbolic_equivalent(expr1: str, expr2: str, tolerance: float = 1e-10) -> bool",
+          "source": "sr_methods/base.py",
+          "docstring": "Check if two expressions are symbolically equivalent using SymPy."
+        },
+        {
+          "name": "ND2Regressor",
+          "signature": "class ND2Regressor(SymbolicRegressorBase)",
+          "source": "sr_methods/nd2_wrapper.py",
+          "docstring": "Neural Decomposition Dictionary (ND2) wrapper. Transformer-based MCTS with learned priors."
+        },
+        {
+          "name": "GPlearnRegressor",
+          "signature": "class GPlearnRegressor(SymbolicRegressorBase)",
+          "source": "sr_methods/gplearn_wrapper.py",
+          "docstring": "GPlearn genetic programming wrapper for symbolic regression."
+        },
+        {
+          "name": "PySRRegressor",
+          "signature": "class PySRRegressor(SymbolicRegressorBase)",
+          "source": "sr_methods/pysr_wrapper.py",
+          "docstring": "PySR high-performance symbolic regression using Julia backend."
+        }
+      ]
+    },
+    {
+      "module": "sr_eval",
+      "description": "Evaluation module for symbolic regression benchmarking.",
+      "items": [
+        {
+          "name": "EvalResult",
+          "signature": "@dataclass EvalResult(sample_id: str, scenario: str, method: str, gt_expression: str, pred_expression: str, mse: float, r2_score: float, exact_match: bool, symbolic_equivalent: bool, complexity: int, runtime_sec: float)",
+          "source": "sr_eval.py",
+          "docstring": "Evaluation result for a single sample. Contains predicted expression and all metrics."
+        },
+        {
+          "name": "evaluate_result",
+          "signature": "evaluate_result(sr_result: SRResult, y_true: np.ndarray, y_pred: np.ndarray, gt_expression: str, ...) -> EvalResult",
+          "source": "sr_eval.py",
+          "docstring": "Evaluate a symbolic regression result against ground truth."
+        },
+        {
+          "name": "aggregate_results",
+          "signature": "aggregate_results(results: List[EvalResult]) -> pd.DataFrame",
+          "source": "sr_eval.py",
+          "docstring": "Aggregate evaluation results into a DataFrame."
+        },
+        {
+          "name": "compute_summary_stats",
+          "signature": "compute_summary_stats(df: pd.DataFrame) -> pd.DataFrame",
+          "source": "sr_eval.py",
+          "docstring": "Compute summary statistics by method and scenario."
+        },
+        {
+          "name": "recovery_analysis",
+          "signature": "recovery_analysis(df: pd.DataFrame, thresholds: Dict[str, float] = None) -> pd.DataFrame",
+          "source": "sr_eval.py",
+          "docstring": "Analyze expression recovery rates by R² and complexity thresholds."
+        },
+        {
+          "name": "generate_report",
+          "signature": "generate_report(df: pd.DataFrame, output_path: Optional[str] = None) -> str",
+          "source": "sr_eval.py",
+          "docstring": "Generate a comprehensive markdown benchmark report."
+        },
+        {
+          "name": "SRBenchmark",
+          "signature": "class SRBenchmark(methods: List[SymbolicRegressorBase], time_limit: float = 60.0, verbose: bool = False)",
+          "source": "sr_eval.py",
+          "docstring": "Main class for running symbolic regression benchmarks. Call run(samples) to execute."
+        }
+      ]
+    },
+    {
+      "module": "sr_scenarios",
+      "description": "Symbolic regression scenarios and sample generation.",
+      "items": [
+        {
+          "name": "SRSample",
+          "signature": "@dataclass SRSample(sample_id: str, scenario: str, t: np.ndarray, u: np.ndarray, y_clean: np.ndarray, y_noisy: np.ndarray, trend_expr: str, cycle_expr: str, combined_expr: str, trend_params: Dict, cycle_params: Dict)",
+          "source": "sr_scenarios.py",
+          "docstring": "A single sample for symbolic regression benchmark with ground truth expressions."
+        },
+        {
+          "name": "list_sr_scenarios",
+          "signature": "list_sr_scenarios() -> List[str]",
+          "source": "sr_scenarios.py",
+          "docstring": "List available symbolic regression scenarios."
+        },
+        {
+          "name": "make_sr_sample",
+          "signature": "make_sr_sample(scenario: str, length: int = 512, noise_sigma: float = 0.1, random_seed: Optional[int] = None) -> SRSample",
+          "source": "sr_scenarios.py",
+          "docstring": "Create a SR sample for a named scenario with data and ground truth expressions."
+        },
+        {
+          "name": "get_trend_expression",
+          "signature": "get_trend_expression(trend_type: str, params: Dict, var_name: str = 'u') -> Tuple[str, Dict]",
+          "source": "sr_scenarios.py",
+          "docstring": "Generate symbolic expression for trend component."
+        },
+        {
+          "name": "get_cycle_expression",
+          "signature": "get_cycle_expression(cycle_type: str, params: Dict, time_var: str = 't', norm_var: str = 'u') -> Tuple[str, Dict]",
+          "source": "sr_scenarios.py",
+          "docstring": "Generate symbolic expression for cycle component."
         }
       ]
     }
