@@ -3,6 +3,7 @@ import { JetBrains_Mono, Source_Serif_4, Space_Grotesk } from "next/font/google"
 import "./globals.css";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { Sidebar } from "@/components/sidebar";
 
 const display = Space_Grotesk({
   variable: "--font-display",
@@ -33,17 +34,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${display.variable} ${body.variable} ${mono.variable} antialiased`}>
-        <div className="relative min-h-screen overflow-hidden">
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -left-24 top-32 h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(15,143,134,0.22),transparent_70%)] blur-2xl"
-          />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -right-32 top-10 h-80 w-80 rounded-full bg-[radial-gradient(circle,rgba(240,111,79,0.2),transparent_70%)] blur-2xl"
-          />
+        <div className="min-h-screen flex flex-col">
           <SiteHeader />
-          <main className="relative z-10">{children}</main>
+          <div className="flex flex-1">
+            <Sidebar />
+            <main className="flex-1 p-8 max-w-5xl mx-auto w-full">
+              {children}
+            </main>
+          </div>
           <SiteFooter />
         </div>
       </body>

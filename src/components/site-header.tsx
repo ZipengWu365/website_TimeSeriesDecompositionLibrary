@@ -22,13 +22,9 @@ export function SiteHeader() {
             {DATA_VERSION}
           </span>
         </div>
-        <nav className="hidden items-center gap-5 text-sm font-semibold text-[color:var(--muted)] md:flex">
-          {NAV_ITEMS.map((item) => (
-            <Link key={item.href} href={item.href} className="transition hover:text-[color:var(--ink)]">
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+
+        <div className="flex-1" />
+
         <details className="relative md:hidden">
           <summary className="cursor-pointer rounded-full border border-[color:var(--border)] px-3 py-2 text-xs font-semibold text-[color:var(--muted)]">
             Menu

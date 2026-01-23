@@ -2,16 +2,13 @@
 
 :root {
   color-scheme: light;
-  --bg: #f7f2ea;
-  --surface: #ffffff;
-  --ink: #0f1418;
-  --muted: #5d6a72;
-  --accent: #0f8f86;
-  --accent-strong: #0b6a63;
-  --accent-warm: #f06f4f;
-  --border: #e5ddd2;
-  --glow: rgba(15, 143, 134, 0.18);
-  --shadow: 0 20px 60px rgba(15, 20, 24, 0.12);
+  --bg: #ffffff;
+  --surface: #f8f9fa;
+  --ink: #333333;
+  --muted: #666666;
+  --accent: #2980b9; 
+  --accent-strong: #1c5a85;
+  --border: #e0e0e0;
 }
 
 @theme inline {
@@ -27,10 +24,7 @@
 }
 
 body {
-  background:
-    radial-gradient(circle at 10% 10%, rgba(240, 111, 79, 0.16), transparent 45%),
-    radial-gradient(circle at 85% 15%, rgba(15, 143, 134, 0.14), transparent 50%),
-    linear-gradient(135deg, #f7f2ea 0%, #eff4f2 45%, #eef2f7 100%);
+  background: var(--bg);
   color: var(--ink);
   font-family: var(--font-body);
   min-height: 100vh;
