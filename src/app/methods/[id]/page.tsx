@@ -78,7 +78,7 @@ export default async function MethodDetailPage({ params }: MethodPageProps) {
           </div>
           <div className="mt-6 text-sm text-[color:var(--muted)]">
             See{" "}
-            <Link href="/docs#period-injection" className="text-[color:var(--accent-strong)]">
+            <Link href={`${BASE_PATH}/docs#period-injection`} className="text-[color:var(--accent-strong)]">
               period injection protocol
             </Link>{" "}
             for fairness constraints.
@@ -120,7 +120,7 @@ export default async function MethodDetailPage({ params }: MethodPageProps) {
             <p className="font-semibold text-[color:var(--ink)]">Diagnostic note</p>
             <p className="mt-2">
               Cross-tier drops often indicate period drift or regime shifts. Compare with{" "}
-              <Link href="/leaderboard" className="text-[color:var(--accent-strong)]">
+              <Link href={`${BASE_PATH}/leaderboard/`} className="text-[color:var(--accent-strong)]">
                 tier-wise leaderboard
               </Link>{" "}
               to inspect full scenario breakdowns.
