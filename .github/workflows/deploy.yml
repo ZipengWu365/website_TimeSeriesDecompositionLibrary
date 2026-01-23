@@ -49,6 +49,12 @@ jobs:
         env:
           NEXT_PUBLIC_BASE_PATH: ${{ steps.base-path.outputs.base_path }}
 
+      - name: Verify static output
+        run: |
+          test -f out/.nojekyll
+          test -f out/methods/STL/index.html
+          test -f out/methods/index.html
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
