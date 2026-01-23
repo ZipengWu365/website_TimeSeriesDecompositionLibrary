@@ -1,0 +1,53 @@
+{
+  "suite_version": "v0.0.0",
+  "suites": [
+    {
+      "suite_id": "core",
+      "name": "Core Suite",
+      "scenario_ids": [
+        "S01_period_drift",
+        "S02_regime_switch",
+        "S03_event_pulse",
+        "S04_multiseasonal",
+        "S05_trend_break",
+        "S06_noise_bursts"
+      ],
+      "description": "Balanced suite for component recovery under drift, regime changes, and events."
+    },
+    {
+      "suite_id": "full",
+      "name": "Full Suite",
+      "scenario_ids": [
+        "S01_period_drift",
+        "S02_regime_switch",
+        "S03_event_pulse",
+        "S04_multiseasonal",
+        "S05_trend_break",
+        "S06_noise_bursts",
+        "S07_level_shifts",
+        "S08_sparse_spikes"
+      ],
+      "description": "Extended suite covering additional sparse and structural scenarios."
+    }
+  ],
+  "tiers": {
+    "S01_period_drift": 1,
+    "S02_regime_switch": 2,
+    "S03_event_pulse": 2,
+    "S04_multiseasonal": 1,
+    "S05_trend_break": 3,
+    "S06_noise_bursts": 3,
+    "S07_level_shifts": 2,
+    "S08_sparse_spikes": 3
+  },
+  "scenario_periods": {
+    "S01_period_drift": [24],
+    "S02_regime_switch": [12],
+    "S03_event_pulse": [24],
+    "S04_multiseasonal": [7, 30],
+    "S05_trend_break": [24],
+    "S06_noise_bursts": [12],
+    "S07_level_shifts": [24],
+    "S08_sparse_spikes": [7]
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "methods": [
+    {
+      "method_name": "stl",
+      "display_name": "STL",
+      "reference": "Cleveland et al. 1990",
+      "needs_period": true,
+      "default_config": {
+        "robust": true,
+        "seasonal_deg": 1,
+        "trend_deg": 1
+      },
+      "wrapper_path": "tsdecomp/methods/stl.py",
+      "expected_strengths": ["smooth trend", "stable seasonality"],
+      "known_signatures": ["drops under period drift", "bleeds trend into seasonal"]
+    },
+    {
+      "method_name": "mstl",
+      "display_name": "MSTL",
+      "reference": "Bandara et al. 2021",
+      "needs_period": true,
+      "default_config": {
+        "periods": [7, 30],
+        "stl_kwargs": {"robust": true}
+      },
+      "wrapper_path": "tsdecomp/methods/mstl.py",
+      "expected_strengths": ["multi-period seasonality"],
+      "known_signatures": ["underfits regime switches"]
+    },
+    {
+      "method_name": "robust_stl",
+      "display_name": "Robust STL+",
+      "reference": "Synthetic baseline",
+      "needs_period": true,
+      "default_config": {
+        "robust": true,
+        "seasonal_window": 21
+      },
+      "wrapper_path": "tsdecomp/methods/robust_stl.py",
+      "expected_strengths": ["event resilience", "noise bursts"],
+      "known_signatures": ["slow to adapt to drift"]
+    },
+    {
+      "method_name": "spectral_adapt",
+      "display_name": "Spectral-Adapt",
+      "reference": "Internal prototype",
+      "needs_period": false,
+      "default_config": {
+        "max_modes": 5,
+        "adaptive": true
+      },
+      "wrapper_path": "tsdecomp/methods/spectral_adapt.py",
+      "expected_strengths": ["period drift", "multi-scale"],
+      "known_signatures": ["fails on sharp trend breaks"]
+    },
+    {
+      "method_name": "basis_fusion",
+      "display_name": "Basis Fusion",
+      "reference": "Internal prototype",
+      "needs_period": false,
+      "default_config": {
+        "basis": "wavelet",
+        "levels": 4
+      },
+      "wrapper_path": "tsdecomp/methods/basis_fusion.py",
+      "expected_strengths": ["regime switches", "sparse events"],
+      "known_signatures": ["over-smoothing trend"]
+    }
+  ]
+}
