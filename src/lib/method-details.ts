@@ -63,6 +63,12 @@ def _estimate_seasonal_indices(detrended: np.ndarray, period: int) -> np.ndarray
       "Trend is piecewise-constant within the moving window.",
       "Seasonal component is strictly periodic with integer period.",
     ],
+    figures: [
+      {
+        src: "/figs/fig02_method_comparison_1766848048180.png",
+        caption: "Method overview highlighting moving average priors.",
+      },
+    ],
   },
   STL: {
     overview:
@@ -133,6 +139,12 @@ season = res.seasonal.sum(axis=1)`,
       "Each seasonal component is strictly periodic with known periods.",
       "Trend remains smooth across seasonal iterations.",
     ],
+    figures: [
+      {
+        src: "/figs/fig03_stl_loess_principle_1766848070886.png",
+        caption: "LOESS smoothing shared by STL and MSTL.",
+      },
+    ],
   },
   ROBUSTSTL: {
     overview:
@@ -160,6 +172,16 @@ season = res.seasonal`,
     assumptions: [
       "Same periodicity assumptions as STL.",
       "Outliers are down-weighted by bisquare reweighting.",
+    ],
+    figures: [
+      {
+        src: "/figs/fig03_stl_loess_principle_1766848070886.png",
+        caption: "LOESS smoothing with robust reweighting.",
+      },
+      {
+        src: "/figs/fig07_stl_failure_1766848255126.png",
+        caption: "Failure case under frequency drift (robust STL inherits this).",
+      },
     ],
   },
   SSA: {
@@ -237,6 +259,12 @@ season = aggregate_modes(imfs, season_imfs)`,
       "Signal is a sum of locally symmetric AM/FM oscillations.",
       "Sifting converges to IMFs with zero-mean envelopes.",
     ],
+    figures: [
+      {
+        src: "/figs/fig02_method_comparison_1766848048180.png",
+        caption: "Method overview including EMD priors.",
+      },
+    ],
   },
   CEEMDAN: {
     overview:
@@ -260,6 +288,12 @@ imfs = np.asarray(ceemdan(y), dtype=float)`,
     assumptions: [
       "Noise-assisted ensemble reduces mode mixing in IMFs.",
       "Grouping by dominant frequency recovers trend/season.",
+    ],
+    figures: [
+      {
+        src: "/figs/fig02_method_comparison_1766848048180.png",
+        caption: "Method overview including EMD-family priors.",
+      },
     ],
   },
   VMD: {
@@ -333,6 +367,12 @@ season = _reconstruct_from_levels(coeffs, season_levels, wavelet_name, len(y))`,
       "Components are separable across wavelet scales.",
       "Low-frequency levels capture trend; mid-levels capture seasonality.",
     ],
+    figures: [
+      {
+        src: "/figs/fig02_method_comparison_1766848048180.png",
+        caption: "Method overview including wavelet priors.",
+      },
+    ],
   },
   GABOR_BANDS: {
     overview:
@@ -360,6 +400,12 @@ return _gabor_to_decomp_result(y, gabor_result, "bands")`,
       "Signal energy is concentrated in fixed time-frequency bands.",
       "Window length controls bias-variance in time-frequency resolution.",
     ],
+    figures: [
+      {
+        src: "/figs/fig09_heatmap_1766848349088.png",
+        caption: "Benchmark heatmap including Gabor-band performance.",
+      },
+    ],
   },
   GABOR_RIDGE: {
     overview:
@@ -382,6 +428,12 @@ gabor_result = gabor_decompose(y, gabor_cfg)`,
     assumptions: [
       "A dominant ridge captures the primary oscillatory component.",
       "Ridge continuity is stable across time frames.",
+    ],
+    figures: [
+      {
+        src: "/figs/fig09_heatmap_1766848349088.png",
+        caption: "Benchmark heatmap including Gabor-ridge performance.",
+      },
     ],
   },
   GABOR_CLUSTER: {
@@ -406,6 +458,12 @@ xj = _istft_rfft(Zj, L, hop, n_fft, window, N)`,
     assumptions: [
       "Clusters in time-frequency space correspond to coherent components.",
       "Trend resides in low-frequency clusters under a threshold.",
+    ],
+    figures: [
+      {
+        src: "/figs/fig09_heatmap_1766848349088.png",
+        caption: "Benchmark heatmap including Gabor-cluster performance.",
+      },
     ],
   },
   STD: {
@@ -434,6 +492,12 @@ if not _HAS_FASTTIMES:
       "Multi-scale bases are available for projection.",
       "Fallback path behaves like SSA when bases are missing.",
     ],
+    figures: [
+      {
+        src: "/figs/fig09_heatmap_1766848349088.png",
+        caption: "Benchmark heatmap including STD placeholder results.",
+      },
+    ],
     notes: ["The public wrapper is a placeholder until the fasttimes backend is available."],
   },
   DR_TS_REG: {
@@ -458,6 +522,12 @@ if not _HAS_FASTTIMES:
     assumptions: [
       "Trend is smooth under second-order differences.",
       "Seasonality is approximately periodic with period P.",
+    ],
+    figures: [
+      {
+        src: "/figs/fig09_heatmap_1766848349088.png",
+        caption: "Benchmark heatmap for baseline comparisons.",
+      },
     ],
     notes: ["Planned method from data-driven decomposition v1."],
   },
@@ -488,6 +558,12 @@ if not _HAS_FASTTIMES:
       "Network architecture encodes low-frequency trend priors.",
       "Seasonal branch can model periodic structure with a soft period penalty.",
     ],
+    figures: [
+      {
+        src: "/figs/fig09_heatmap_1766848349088.png",
+        caption: "Benchmark heatmap for baseline comparisons.",
+      },
+    ],
     notes: ["Planned method from data-driven decomposition v1."],
   },
   SL_LIB: {
@@ -511,6 +587,12 @@ if not _HAS_FASTTIMES:
     assumptions: [
       "Library bases span the expected trend/season families.",
       "Sparse retrieval captures dominant components.",
+    ],
+    figures: [
+      {
+        src: "/figs/fig09_heatmap_1766848349088.png",
+        caption: "Benchmark heatmap for baseline comparisons.",
+      },
     ],
     notes: ["Planned method with FAISS-based retrieval."],
   },

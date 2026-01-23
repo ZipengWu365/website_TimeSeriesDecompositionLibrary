@@ -24,12 +24,6 @@ export default function Home() {
               Open the Leaderboard
             </Link>
             <Link
-              href="/results"
-              className="rounded-full border border-[color:var(--border)] px-5 py-2 text-sm font-semibold text-[color:var(--muted)] transition hover:border-[color:var(--accent)] hover:text-[color:var(--accent-strong)]"
-            >
-              View Results
-            </Link>
-            <Link
               href="/docs"
               className="rounded-full border border-[color:var(--border)] px-5 py-2 text-sm font-semibold text-[color:var(--muted)] transition hover:border-[color:var(--accent)] hover:text-[color:var(--accent-strong)]"
             >

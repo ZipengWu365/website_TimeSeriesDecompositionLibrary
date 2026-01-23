@@ -1,49 +1,8 @@
 import Link from "next/link";
 import { BASE_PATH } from "@/lib/constants";
+import { FigureCard } from "@/components/figure-card";
 
 export default function DocsPage() {
-  const figures = [
-    {
-      src: "/figs/fig01_decomposition_problem_1766848017819.png",
-      caption: "Decomposition task definition and component alignment.",
-    },
-    {
-      src: "/figs/fig02_method_comparison_1766848048180.png",
-      caption: "Method overview by implicit priors.",
-    },
-    {
-      src: "/figs/fig06_synthetic_data_1766848210813.png",
-      caption: "Synthetic data generation taxonomy.",
-    },
-    {
-      src: "/figs/fig09_heatmap_1766848349088.png",
-      caption: "Method-scenario performance heatmap (trend/season).",
-    },
-    {
-      src: "/figs/decomp_compare_logistic_trend_multi_seasonal.png",
-      caption: "Decomposition comparison: logistic trend + multi-seasonal.",
-    },
-    {
-      src: "/figs/decomp_compare_rw_trend_freq_drifting_cycle.png",
-      caption: "Decomposition comparison: random walk + drifting cycle.",
-    },
-    {
-      src: "/figs/decomp_compare_piecewise_trend_regime_cycle_with_events.png",
-      caption: "Decomposition comparison: piecewise trend + regime cycle.",
-    },
-    {
-      src: "/figs/heatmap_T_r2.png",
-      caption: "Trend R2 heatmap by scenario.",
-    },
-    {
-      src: "/figs/heatmap_S_spectral_corr.png",
-      caption: "Seasonal spectral correlation heatmap.",
-    },
-    {
-      src: "/figs/heatmap_S_maxlag_corr.png",
-      caption: "Seasonal max-lag correlation heatmap.",
-    },
-  ];
   return (
     <div className="mx-auto w-full max-w-6xl px-6 pb-20 pt-12">
       <div className="space-y-2">
@@ -74,6 +33,10 @@ export default function DocsPage() {
               <li>3) Validate determinism and schema before export.</li>
             </ul>
           </article>
+          <FigureCard
+            src="/figs/fig10_flowchart_1766848383670.png"
+            caption="End-to-end pipeline from data generation to reporting."
+          />
 
           <article
             id="metrics"
@@ -100,6 +63,21 @@ export default function DocsPage() {
             </div>
           </article>
 
+          <div className="grid gap-6 md:grid-cols-2">
+            <FigureCard
+              src="/figs/heatmap_T_r2.png"
+              caption="Trend R2 heatmap by scenario."
+            />
+            <FigureCard
+              src="/figs/heatmap_S_spectral_corr.png"
+              caption="Seasonal spectral correlation heatmap."
+            />
+          </div>
+          <FigureCard
+            src="/figs/heatmap_S_maxlag_corr.png"
+            caption="Seasonal max-lag correlation heatmap."
+          />
+
           <article
             id="diagnostic-patterns"
             className="rounded-3xl border border-[color:var(--border)] bg-white/90 p-6 shadow-[var(--shadow)]"
@@ -120,9 +98,31 @@ export default function DocsPage() {
               </div>
             </div>
           </article>
+          <div className="grid gap-6 md:grid-cols-2">
+            <FigureCard
+              src="/figs/fig07_stl_failure_1766848255126.png"
+              caption="Fixed-period STL failure under frequency drift."
+            />
+            <FigureCard
+              src="/figs/fig08_vmd_success_1766848314528.png"
+              caption="VMD success on drifting frequencies with adaptive bands."
+            />
+          </div>
         </div>
 
         <div className="space-y-6">
+          <FigureCard
+            src="/figs/fig01_decomposition_problem_1766848017819.png"
+            caption="Task definition: mapping y to trend, seasonal, and residual."
+          />
+          <FigureCard
+            src="/figs/fig02_method_comparison_1766848048180.png"
+            caption="Method overview by implicit priors."
+          />
+          <FigureCard
+            src="/figs/fig06_synthetic_data_1766848210813.png"
+            caption="Synthetic data generation taxonomy."
+          />
           <article
             id="period-injection"
             className="rounded-3xl border border-[color:var(--border)] bg-white/90 p-6 shadow-[var(--shadow)]"
@@ -176,30 +176,33 @@ python -m tsdecomp export \\
       </section>
 
       <section className="mt-12 space-y-4">
-        <div className="space-y-2">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[color:var(--muted)]">
-            Figures
-          </p>
-          <h2 className="text-2xl font-semibold">Benchmark visuals</h2>
-          <p className="text-sm text-[color:var(--muted)]">
-            Key diagrams and result snapshots used across the benchmark narrative.
-          </p>
-        </div>
-        <div className="grid gap-6 md:grid-cols-2">
-          {figures.map((figure) => (
-            <figure
-              key={figure.src}
-              className="rounded-3xl border border-[color:var(--border)] bg-white/90 p-4 shadow-[var(--shadow)]"
+        <h2 className="text-2xl font-semibold">Reference materials</h2>
+        <div className="grid gap-4 md:grid-cols-2">
+          {[
+            {
+              label: "Seasonal-Trend-Dispersion Decomposition",
+              href: `${BASE_PATH}/resources/STD_A_Seasonal-Trend-Dispersion_Decomposition_of_Time_Series.pdf`,
+            },
+            {
+              label: "Latent seasonal-trend representations (NeurIPS 2022)",
+              href: `${BASE_PATH}/resources/NeurIPS-2022-learning-latent-seasonal-trend-representations-for-time-series-forecasting-Paper-Conference.pdf`,
+            },
+            {
+              label: "Reference: 2405.14616v1",
+              href: `${BASE_PATH}/resources/2405.14616v1.pdf`,
+            },
+            {
+              label: "Decomposition method analysis report (PDF)",
+              href: `${BASE_PATH}/resources/decomposition_method_analysis.pdf`,
+            },
+          ].map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              className="rounded-2xl border border-[color:var(--border)] bg-white/90 px-4 py-3 text-sm font-semibold text-[color:var(--accent-strong)] shadow-[var(--shadow)]"
             >
-              <img
-                src={`${BASE_PATH}${figure.src}`}
-                alt={figure.caption}
-                className="h-auto w-full rounded-2xl border border-[color:var(--border)]"
-              />
-              <figcaption className="mt-3 text-xs text-[color:var(--muted)]">
-                {figure.caption}
-              </figcaption>
-            </figure>
+              {item.label}
+            </a>
           ))}
         </div>
       </section>

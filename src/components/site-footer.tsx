@@ -2,8 +2,6 @@ import Link from "next/link";
 
 const FOOTER_LINKS = [
   { href: "/docs", label: "Protocol & Metrics" },
-  { href: "/results", label: "Results" },
-  { href: "/experiments", label: "Experiments" },
   { href: "/submit", label: "Submission Contract" },
   { href: "/scenarios", label: "Scenario Library" },
   { href: "/methods", label: "Method Registry" },
