@@ -18,6 +18,7 @@ export type MethodDetail = {
   overview: string;
   equations: MethodEquation[];
   code: MethodCode[];
+  assumptions?: string[];
   figures?: MethodFigure[];
   notes?: string[];
 };
@@ -58,6 +59,10 @@ def _estimate_seasonal_indices(detrended: np.ndarray, period: int) -> np.ndarray
     return season`,
       },
     ],
+    assumptions: [
+      "Trend is piecewise-constant within the moving window.",
+      "Seasonal component is strictly periodic with integer period.",
+    ],
   },
   STL: {
     overview:
@@ -86,6 +91,10 @@ trend = np.asarray(res.trend)
 seasonal = np.asarray(res.seasonal)
 residual = np.asarray(res.resid)`,
       },
+    ],
+    assumptions: [
+      "Trend is locally polynomial (smooth) under LOESS.",
+      "Seasonal component is strictly periodic with fixed period.",
     ],
     figures: [
       {
@@ -120,6 +129,10 @@ res = mstl.fit()
 season = res.seasonal.sum(axis=1)`,
       },
     ],
+    assumptions: [
+      "Each seasonal component is strictly periodic with known periods.",
+      "Trend remains smooth across seasonal iterations.",
+    ],
   },
   ROBUSTSTL: {
     overview:
@@ -144,6 +157,10 @@ trend = res.trend
 season = res.seasonal`,
       },
     ],
+    assumptions: [
+      "Same periodicity assumptions as STL.",
+      "Outliers are down-weighted by bisquare reweighting.",
+    ],
   },
   SSA: {
     overview:
@@ -156,6 +173,10 @@ season = res.seasonal`,
       {
         title: "SVD",
         latex: String.raw`\mathbf{X} = \sum_{i=1}^{d} \sigma_i \mathbf{u}_i \mathbf{v}_i^T`,
+      },
+      {
+        title: "Dominant frequency",
+        latex: String.raw`f_i = \arg\max_f |\mathcal{F}[\mathbf{u}_i](f)|`,
       },
       {
         title: "Diagonal averaging",
@@ -179,6 +200,10 @@ Xi = np.outer(U[:, idx], s[idx] * Vt[idx, :])`,
         caption: "SSA pipeline: embedding, SVD, grouping, and reconstruction.",
       },
     ],
+    assumptions: [
+      "Components occupy separable subspaces in the trajectory matrix.",
+      "Trend and seasonal structure are low-rank.",
+    ],
   },
   EMD: {
     overview:
@@ -187,6 +212,10 @@ Xi = np.outer(U[:, idx], s[idx] * Vt[idx, :])`,
       {
         title: "IMF condition",
         latex: String.raw`m(t) = \frac{U(t) + L(t)}{2}, \quad h(t) \leftarrow h(t) - m(t)`,
+      },
+      {
+        title: "Extrema / zero-crossing balance",
+        latex: String.raw`\#\text{extrema}(c) \approx \#\text{zero-crossings}(c)`,
       },
       {
         title: "Reconstruction",
@@ -203,6 +232,10 @@ dom_freqs = [dominant_frequency(comp, fs) for comp in imfs]
 trend = aggregate_modes(imfs, trend_imfs)
 season = aggregate_modes(imfs, season_imfs)`,
       },
+    ],
+    assumptions: [
+      "Signal is a sum of locally symmetric AM/FM oscillations.",
+      "Sifting converges to IMFs with zero-mean envelopes.",
     ],
   },
   CEEMDAN: {
@@ -224,6 +257,10 @@ if "trials" in cfg:
 imfs = np.asarray(ceemdan(y), dtype=float)`,
       },
     ],
+    assumptions: [
+      "Noise-assisted ensemble reduces mode mixing in IMFs.",
+      "Grouping by dominant frequency recovers trend/season.",
+    ],
   },
   VMD: {
     overview:
@@ -232,6 +269,10 @@ imfs = np.asarray(ceemdan(y), dtype=float)`,
       {
         title: "Variational objective",
         latex: String.raw`\min_{u_k,\omega_k} \sum_k \left\| \partial_t \left[u_k^+(t) e^{-j \omega_k t}\right] \right\|_2^2`,
+      },
+      {
+        title: "Center frequency update",
+        latex: String.raw`\omega_k = \frac{\int_0^{\infty} \omega |\hat{u}_k(\omega)|^2 d\omega}{\int_0^{\infty} |\hat{u}_k(\omega)|^2 d\omega}`,
       },
       {
         title: "Reconstruction",
@@ -257,6 +298,10 @@ modes, _, omega = VMD(y, alpha, tau, K, DC, init, tol)`,
         caption: "VMD maintains seasonal recovery under frequency drift.",
       },
     ],
+    assumptions: [
+      "Signal is a sum of narrow-band modes.",
+      "Modes are spectrally separable.",
+    ],
   },
   WAVELET: {
     overview:
@@ -270,6 +315,10 @@ modes, _, omega = VMD(y, alpha, tau, K, DC, init, tol)`,
         title: "Reconstruction",
         latex: String.raw`y(t) = \sum_k c_{J,k}\phi_{J,k}(t) + \sum_{j=1}^{J}\sum_k d_{j,k}\psi_{j,k}(t)`,
       },
+      {
+        title: "Trend/season assignment",
+        latex: String.raw`\hat{T} \leftarrow \text{levels } \{0\},\quad \hat{S} \leftarrow \text{levels } \{1,2\}`,
+      },
     ],
     code: [
       {
@@ -279,6 +328,10 @@ modes, _, omega = VMD(y, alpha, tau, K, DC, init, tol)`,
 trend = _reconstruct_from_levels(coeffs, trend_levels, wavelet_name, len(y))
 season = _reconstruct_from_levels(coeffs, season_levels, wavelet_name, len(y))`,
       },
+    ],
+    assumptions: [
+      "Components are separable across wavelet scales.",
+      "Low-frequency levels capture trend; mid-levels capture seasonality.",
     ],
   },
   GABOR_BANDS: {
@@ -303,6 +356,10 @@ gabor_result = gabor_decompose(y, gabor_cfg)
 return _gabor_to_decomp_result(y, gabor_result, "bands")`,
       },
     ],
+    assumptions: [
+      "Signal energy is concentrated in fixed time-frequency bands.",
+      "Window length controls bias-variance in time-frequency resolution.",
+    ],
   },
   GABOR_RIDGE: {
     overview:
@@ -321,6 +378,10 @@ return _gabor_to_decomp_result(y, gabor_result, "bands")`,
 gabor_cfg.ridge = True
 gabor_result = gabor_decompose(y, gabor_cfg)`,
       },
+    ],
+    assumptions: [
+      "A dominant ridge captures the primary oscillatory component.",
+      "Ridge continuity is stable across time frames.",
     ],
   },
   GABOR_CLUSTER: {
@@ -341,6 +402,10 @@ labels = _assign_clusters_faiss(feats, model)
 Zj = Z * mask
 xj = _istft_rfft(Zj, L, hop, n_fft, window, N)`,
       },
+    ],
+    assumptions: [
+      "Clusters in time-frequency space correspond to coherent components.",
+      "Trend resides in low-frequency clusters under a threshold.",
     ],
   },
   STD: {
@@ -364,6 +429,10 @@ except ImportError:
 if not _HAS_FASTTIMES:
     return ssa_decompose(y, params)`,
       },
+    ],
+    assumptions: [
+      "Multi-scale bases are available for projection.",
+      "Fallback path behaves like SSA when bases are missing.",
     ],
     notes: ["The public wrapper is a placeholder until the fasttimes backend is available."],
   },

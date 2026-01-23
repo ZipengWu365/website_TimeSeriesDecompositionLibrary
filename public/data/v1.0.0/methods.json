@@ -2,8 +2,8 @@
   "methods": [
     {
       "method_name": "MA_BASELINE",
-      "display_name": "MA baseline",
-      "reference": "Centered moving average baseline.",
+      "display_name": "Moving Average",
+      "reference": "Moving average baseline (trend + seasonal indices).",
       "needs_period": false,
       "default_config": {
         "trend_window": 13,
@@ -13,10 +13,10 @@
       "expected_strengths": [
         "fast baseline",
         "smooth trend",
-        "stable periodicity"
+        "strict periodicity"
       ],
       "known_signatures": [
-        "blurs abrupt changes",
+        "edge bias",
         "drift sensitivity"
       ]
     },
@@ -31,10 +31,11 @@
       "wrapper_path": "tsdecomp/methods/stl.py",
       "expected_strengths": [
         "stationary seasonality",
-        "smooth trend"
+        "smooth trend",
+        "robust LOESS"
       ],
       "known_signatures": [
-        "frequency drift failure",
+        "fixed-period drift failure",
         "phase mismatch"
       ]
     },
@@ -74,7 +75,8 @@
         "stationary seasonality"
       ],
       "known_signatures": [
-        "frequency drift failure"
+        "fixed-period drift failure",
+        "phase mismatch"
       ]
     },
     {
@@ -94,6 +96,24 @@
       "known_signatures": [
         "window sensitivity",
         "regime leakage"
+      ]
+    },
+    {
+      "method_name": "STD",
+      "display_name": "STD",
+      "reference": "Multi-scale basis (placeholder wrapper).",
+      "needs_period": false,
+      "default_config": {
+        "mode": "STD_MULTI"
+      },
+      "wrapper_path": "synthetic_ts_bench/decomp_methods.py",
+      "expected_strengths": [
+        "multi-scale bases",
+        "structured decomposition"
+      ],
+      "known_signatures": [
+        "basis mismatch",
+        "fallback to SSA"
       ]
     },
     {
@@ -129,7 +149,8 @@
         "nonstationary cycles"
       ],
       "known_signatures": [
-        "noise budget tuning"
+        "noise tuning",
+        "compute heavy"
       ]
     },
     {
@@ -162,8 +183,8 @@
       },
       "wrapper_path": "tsdecomp/methods/wavelet.py",
       "expected_strengths": [
-        "multiscale structure",
-        "transient localization"
+        "multiscale localization",
+        "transient detection"
       ],
       "known_signatures": [
         "boundary artifacts",
@@ -172,7 +193,7 @@
     },
     {
       "method_name": "GABOR_BANDS",
-      "display_name": "Gabor bands",
+      "display_name": "Gabor Bands",
       "reference": "STFT bandpass decomposition.",
       "needs_period": false,
       "default_config": {
@@ -191,7 +212,7 @@
     },
     {
       "method_name": "GABOR_RIDGE",
-      "display_name": "Gabor ridge",
+      "display_name": "Gabor Ridge",
       "reference": "STFT ridge tracking.",
       "needs_period": false,
       "default_config": {
@@ -201,8 +222,8 @@
       },
       "wrapper_path": "synthetic_ts_bench/decomp_methods.py",
       "expected_strengths": [
-        "chirp tracking",
-        "dominant ridge"
+        "dominant ridge tracking",
+        "chirp capture"
       ],
       "known_signatures": [
         "ridge gaps",
@@ -211,7 +232,7 @@
     },
     {
       "method_name": "GABOR_CLUSTER",
-      "display_name": "Gabor cluster",
+      "display_name": "Gabor Cluster",
       "reference": "Gabor atoms clustered in time-frequency space.",
       "needs_period": false,
       "default_config": {
@@ -226,24 +247,6 @@
       "known_signatures": [
         "model dependence",
         "cluster mismatch"
-      ]
-    },
-    {
-      "method_name": "STD",
-      "display_name": "STD",
-      "reference": "Multi-scale basis (placeholder wrapper).",
-      "needs_period": false,
-      "default_config": {
-        "mode": "STD_MULTI"
-      },
-      "wrapper_path": "tsdecomp/methods/std_multi.py",
-      "expected_strengths": [
-        "multi-scale bases",
-        "structured decomposition"
-      ],
-      "known_signatures": [
-        "basis mismatch",
-        "fallback to SSA"
       ]
     }
   ]

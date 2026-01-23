@@ -146,6 +146,18 @@ export default async function MethodDetailPage({ params }: MethodPageProps) {
                 </div>
               ))}
             </div>
+            {detail.assumptions?.length ? (
+              <div className="mt-4 rounded-2xl border border-[color:var(--border)] bg-[color:var(--bg)]/70 p-4 text-xs text-[color:var(--muted)]">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)]">
+                  Implicit assumptions
+                </p>
+                <ul className="mt-2 space-y-1">
+                  {detail.assumptions.map((assumption) => (
+                    <li key={assumption}>{assumption}</li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
             {detail.notes?.length ? (
               <div className="mt-4 rounded-2xl border border-[color:var(--border)] bg-[color:var(--bg)]/70 p-4 text-xs text-[color:var(--muted)]">
                 <p className="font-semibold text-[color:var(--ink)]">Notes</p>
