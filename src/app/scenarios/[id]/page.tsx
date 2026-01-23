@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getLeaderboard, getMethods, getScenarios, getSuites } from "@/lib/data";
 import { FigureCard } from "@/components/figure-card";
-import { BASE_PATH } from "@/lib/constants";
 
 type ScenarioPageProps = {
   params: { id: string };
@@ -171,7 +170,7 @@ export default async function ScenarioDetailPage({ params }: ScenarioPageProps) 
             {topMethods.map((method) => (
               <Link
                 key={method.method_name}
-                href={`${BASE_PATH}/methods/${method.method_name}/`}
+                href={`/methods/${method.method_name}/`}
                 className="flex items-center justify-between rounded-2xl border border-[color:var(--border)] px-4 py-3 text-sm transition hover:border-[color:var(--accent)]"
               >
                 <div>
@@ -190,7 +189,10 @@ export default async function ScenarioDetailPage({ params }: ScenarioPageProps) 
             <p className="font-semibold text-[color:var(--ink)]">Need more context?</p>
             <p className="mt-2">
               Jump to{" "}
-              <Link href={`${BASE_PATH}/docs#diagnostic-patterns`} className="text-[color:var(--accent-strong)]">
+              <Link
+                href={{ pathname: "/docs", hash: "diagnostic-patterns" }}
+                className="text-[color:var(--accent-strong)]"
+              >
                 Diagnostic Patterns
               </Link>{" "}
               to see why these scenarios stress period drift, regime switches, or sparse events.

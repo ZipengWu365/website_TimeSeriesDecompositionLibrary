@@ -225,7 +225,7 @@ export default function LeaderboardClient({
         cell: ({ row }) => (
           <div className="space-y-1">
             <Link
-              href={`${BASE_PATH}/methods/${row.original.method_name}/`}
+              href={`/methods/${row.original.method_name}/`}
               className="text-sm font-semibold text-[color:var(--ink)]"
             >
               {row.original.display_name}
@@ -281,7 +281,7 @@ export default function LeaderboardClient({
               Reproduce
             </button>
             <Link
-              href={`${BASE_PATH}/docs#diagnostic-patterns`}
+              href={{ pathname: "/docs", hash: "diagnostic-patterns" }}
               className="text-xs font-semibold text-[color:var(--accent-strong)]"
             >
               Why?
@@ -479,7 +479,7 @@ export default function LeaderboardClient({
               return (
                 <Link
                   key={scenarioId}
-                  href={`${BASE_PATH}/scenarios/${scenarioId}/`}
+                  href={`/scenarios/${scenarioId}/`}
                   className="rounded-full border border-[color:var(--border)] px-3 py-1 text-[color:var(--muted)] transition hover:border-[color:var(--accent)] hover:text-[color:var(--accent-strong)]"
                 >
                   {scenario?.family ?? scenarioId}

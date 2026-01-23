@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import type { Method } from "@/lib/schemas";
-import { BASE_PATH } from "@/lib/constants";
 
 type MethodsClientProps = {
   methods: Method[];
@@ -60,7 +59,7 @@ export default function MethodsClient({ methods }: MethodsClientProps) {
         {filtered.map((method) => (
           <Link
             key={method.method_name}
-            href={`${BASE_PATH}/methods/${method.method_name}/`}
+            href={`/methods/${method.method_name}/`}
             className="rounded-3xl border border-[color:var(--border)] bg-white/90 p-5 shadow-[var(--shadow)] transition hover:-translate-y-0.5 hover:border-[color:var(--accent)]"
           >
             <div className="flex items-center justify-between">
