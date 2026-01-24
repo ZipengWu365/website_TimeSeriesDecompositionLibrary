@@ -34,10 +34,14 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Build API reference
-        run: |
-          git clone --depth 1 https://github.com/ZipengWu365/TS-component-structure-Recover-library _tsdecomp
-          python scripts/build_api_reference.py --repo-root _tsdecomp --source-repo https://github.com/ZipengWu365/TS-component-structure-Recover-library
+      # NOTE: API reference JSON is now maintained manually in public/data/v1.0.0/api_reference.json
+      # with comprehensive coverage of all modules including sr_methods, sr_eval, sr_scenarios.
+      # The auto-generation below is disabled to preserve the enhanced documentation.
+      #
+      # - name: Build API reference
+      #   run: |
+      #     git clone --depth 1 https://github.com/ZipengWu365/TS-component-structure-Recover-library _tsdecomp
+      #     python scripts/build_api_reference.py --repo-root _tsdecomp --source-repo https://github.com/ZipengWu365/TS-component-structure-Recover-library
 
       - name: Compute base path
         id: base-path
