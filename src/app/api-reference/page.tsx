@@ -40,15 +40,18 @@ export default async function ApiReferencePage() {
                   </td>
                 </tr>
                 {/* Items */}
-                {section.items.map((item, itemIdx) => (
+                {section.items.map((item) => (
                   <tr
                     key={`${section.module}-${item.name}`}
                     className="border-t border-[color:var(--border)] hover:bg-gray-50"
                   >
                     <td className="px-4 py-3">
-                      <code className="text-[color:var(--accent-strong)] hover:underline">
+                      <Link
+                        href={`/api-reference/${item.name}/`}
+                        className="font-mono text-[color:var(--accent-strong)] hover:underline"
+                      >
                         {item.name}
-                      </code>
+                      </Link>
                     </td>
                     <td className="px-4 py-3 text-[color:var(--muted)]">
                       {item.docstring || "—"}
