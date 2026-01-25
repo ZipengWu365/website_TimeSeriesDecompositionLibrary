@@ -32,6 +32,20 @@ export const ScenariosFileSchema = z.object({
   scenarios: z.array(ScenarioSchema),
 });
 
+export const ScenarioSeriesSchema = z.object({
+  scenario_id: z.string(),
+  seed: z.number(),
+  length: z.number(),
+  dt: z.number(),
+  values: z.array(z.number()),
+});
+
+export const ScenarioSeriesFileSchema = z.object({
+  suite_version: z.string().optional(),
+  generated_at: z.string().optional(),
+  scenarios: z.array(ScenarioSeriesSchema),
+});
+
 export const MethodSchema = z.object({
   method_name: z.string(),
   display_name: z.string(),
@@ -73,6 +87,34 @@ export const LeaderboardFileSchema = z.object({
   rows: z.array(LeaderboardRowSchema),
 });
 
+export const SrFormulaRowSchema = z.object({
+  decomp_method: z.string(),
+  sr_method: z.string(),
+  final_r2: z.number().nullable().optional(),
+  success: z.boolean().optional(),
+  trend_expr: z.string(),
+  seasonal_expr: z.string(),
+  full_expr: z.string(),
+  trend_expr_latex: z.string().optional(),
+  seasonal_expr_latex: z.string().optional(),
+  full_expr_latex: z.string().optional(),
+});
+
+export const SrFormulaScenarioSchema = z.object({
+  scenario: z.string(),
+  sample_id: z.string(),
+  oracle_trend_expr: z.string(),
+  oracle_seasonal_expr: z.string(),
+  rows: z.array(SrFormulaRowSchema),
+});
+
+export const SrFormulaExamplesFileSchema = z.object({
+  generated_at: z.string().optional(),
+  source_file: z.string().optional(),
+  selection_rule: z.string().optional(),
+  scenarios: z.array(SrFormulaScenarioSchema),
+});
+
 export const ApiReferenceItemSchema = z.object({
   name: z.string(),
   signature: z.string(),
@@ -95,8 +137,13 @@ export const ApiReferenceFileSchema = z.object({
 export type SuitesFile = z.infer<typeof SuitesFileSchema>;
 export type Scenario = z.infer<typeof ScenarioSchema>;
 export type ScenariosFile = z.infer<typeof ScenariosFileSchema>;
+export type ScenarioSeries = z.infer<typeof ScenarioSeriesSchema>;
+export type ScenarioSeriesFile = z.infer<typeof ScenarioSeriesFileSchema>;
 export type Method = z.infer<typeof MethodSchema>;
 export type MethodsFile = z.infer<typeof MethodsFileSchema>;
 export type LeaderboardRow = z.infer<typeof LeaderboardRowSchema>;
 export type LeaderboardFile = z.infer<typeof LeaderboardFileSchema>;
+export type SrFormulaRow = z.infer<typeof SrFormulaRowSchema>;
+export type SrFormulaScenario = z.infer<typeof SrFormulaScenarioSchema>;
+export type SrFormulaExamplesFile = z.infer<typeof SrFormulaExamplesFileSchema>;
 export type ApiReferenceFile = z.infer<typeof ApiReferenceFileSchema>;

@@ -11,8 +11,16 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import clsx from "clsx";
-import type { LeaderboardFile, Method, Scenario, SuitesFile } from "@/lib/schemas";
+import type {
+  LeaderboardFile,
+  LeaderboardRow,
+  Method,
+  Scenario,
+  ScenarioSeries,
+  SuitesFile,
+} from "@/lib/schemas";
 import { BASE_PATH, DATA_VERSION } from "@/lib/constants";
+import { SeriesSparkline } from "@/components/series-sparkline";
 
 type AggregateRow = {
   method_name: string;
@@ -35,6 +43,7 @@ type AggregateRow = {
 type LeaderboardClientProps = {
   suites: SuitesFile;
   scenarios: Scenario[];
+  scenarioSeries: ScenarioSeries[];
   methods: Method[];
   leaderboards: Record<"core" | "full", LeaderboardFile>;
 };
@@ -47,6 +56,44 @@ const METRIC_LABELS: Record<ViewMode, string> = {
   overall: "Composite (Trend + Seasonal)",
 };
 
+const METRIC_GUIDE = [
+  {
+    key: "metric_T_r2",
+    name: "Trend R2",
+    direction: "Higher is better",
+    formula: "1 - SSE/SST between true trend and estimated trend.",
+    detail: "1 is perfect; 0 means no improvement over the mean trend.",
+  },
+  {
+    key: "metric_T_dtw",
+    name: "Trend DTW",
+    direction: "Lower is better",
+    formula: "Dynamic Time Warping distance between trend curves.",
+    detail: "0 means perfect alignment; penalizes shape mismatches.",
+  },
+  {
+    key: "metric_S_spectral_corr",
+    name: "Seasonal Spectral Corr",
+    direction: "Higher is better",
+    formula: "Correlation between Welch power spectra of seasonal components.",
+    detail: "Robust to phase offsets; 1 means identical spectra.",
+  },
+  {
+    key: "metric_S_maxlag_corr",
+    name: "Seasonal Max-lag Corr",
+    direction: "Higher is better",
+    formula: "Max Pearson correlation across +/- 10 lags.",
+    detail: "Captures phase alignment after shifting.",
+  },
+  {
+    key: "metric_S_r2",
+    name: "Seasonal R2",
+    direction: "Higher is better",
+    formula: "R2 on seasonal component (auxiliary metric).",
+    detail: "Phase-sensitive; used for diagnostics rather than ranking.",
+  },
+];
+
 const DTW_SCALE = 0.9;
 
 function normalizeDtw(value: number) {
@@ -57,14 +104,106 @@ function clip(value: number, min = -1, max = 1) {
   return Math.min(Math.max(value, min), max);
 }
 
+function buildCoverageCounts(rows: LeaderboardRow[]): Map<string, number> {
+  const map = new Map<string, Set<string>>();
+  for (const row of rows) {
+    const current = map.get(row.method_name) ?? new Set<string>();
+    current.add(row.scenario_id);
+    map.set(row.method_name, current);
+  }
+  return new Map(Array.from(map.entries(), ([method, scenariosSet]) => [method, scenariosSet.size]));
+}
+
+function buildAggregates(
+  rows: LeaderboardRow[],
+  methodMap: Map<string, Method>,
+  coverageCounts: Map<string, number>,
+  coverageTotal: number,
+): AggregateRow[] {
+  const grouped = new Map<
+    string,
+    {
+      row_count: number;
+      scenario_ids: Set<string>;
+      metric_T_r2: number;
+      metric_T_dtw: number;
+      metric_S_spectral_corr: number;
+      metric_S_maxlag_corr: number;
+      metric_S_r2: number;
+      method_config_json: string;
+    }
+  >();
+
+  for (const row of rows) {
+    const current = grouped.get(row.method_name) ?? {
+      row_count: 0,
+      scenario_ids: new Set<string>(),
+      metric_T_r2: 0,
+      metric_T_dtw: 0,
+      metric_S_spectral_corr: 0,
+      metric_S_maxlag_corr: 0,
+      metric_S_r2: 0,
+      method_config_json: row.method_config_json,
+    };
+    current.row_count += 1;
+    current.scenario_ids.add(row.scenario_id);
+    current.metric_T_r2 += row.metric_T_r2;
+    current.metric_T_dtw += row.metric_T_dtw;
+    current.metric_S_spectral_corr += row.metric_S_spectral_corr;
+    current.metric_S_maxlag_corr += row.metric_S_maxlag_corr;
+    current.metric_S_r2 += row.metric_S_r2 ?? 0;
+    grouped.set(row.method_name, current);
+  }
+
+  return Array.from(grouped.entries()).map(([methodName, sums]) => {
+    const count = Math.max(sums.row_count, 1);
+    const metric_T_r2 = sums.metric_T_r2 / count;
+    const metric_T_dtw = sums.metric_T_dtw / count;
+    const metric_S_spectral_corr = sums.metric_S_spectral_corr / count;
+    const metric_S_maxlag_corr = sums.metric_S_maxlag_corr / count;
+    const metric_S_r2 = sums.metric_S_r2 / count;
+    const trend_score = (clip(metric_T_r2) + normalizeDtw(metric_T_dtw)) / 2;
+    const seasonal_score = (metric_S_spectral_corr + metric_S_maxlag_corr) / 2;
+    const overall_score = 0.5 * trend_score + 0.5 * seasonal_score;
+    const meta = methodMap.get(methodName);
+    return {
+      method_name: methodName,
+      display_name: meta?.display_name ?? methodName,
+      needs_period: meta?.needs_period ?? false,
+      method_config_json: sums.method_config_json,
+      coverage_count: coverageCounts.get(methodName) ?? sums.scenario_ids.size,
+      coverage_total: coverageTotal,
+      row_count: sums.row_count,
+      metric_T_r2,
+      metric_T_dtw,
+      metric_S_spectral_corr,
+      metric_S_maxlag_corr,
+      metric_S_r2,
+      trend_score,
+      seasonal_score,
+      overall_score,
+    };
+  });
+}
+
+function sortAggregates(rows: AggregateRow[], view: ViewMode): AggregateRow[] {
+  const sortKey =
+    view === "seasonal"
+      ? "metric_S_spectral_corr"
+      : view === "trend"
+        ? "metric_T_r2"
+        : "overall_score";
+  return rows.slice().sort((a, b) => b[sortKey] - a[sortKey]);
+}
+
 export default function LeaderboardClient({
   suites,
   scenarios,
+  scenarioSeries,
   methods,
   leaderboards,
 }: LeaderboardClientProps) {
   const [suiteId, setSuiteId] = useState<"core" | "full">("core");
-  const [tier, setTier] = useState<"all" | "1" | "2" | "3">("1");
   const [scenarioFilter, setScenarioFilter] = useState("all");
   const [view, setView] = useState<ViewMode>("seasonal");
   const [search, setSearch] = useState("");
@@ -99,13 +238,14 @@ export default function LeaderboardClient({
     () => new Map(methods.map((method) => [method.method_name, method])),
     [methods],
   );
+  const scenarioSeriesMap = useMemo(
+    () => new Map(scenarioSeries.map((item) => [item.scenario_id, item])),
+    [scenarioSeries],
+  );
 
   const filteredRows = useMemo(() => {
     const rows = leaderboards[suiteId].rows;
     return rows.filter((row) => {
-      if (tier !== "all" && row.tier !== Number(tier)) {
-        return false;
-      }
       if (scenarioFilter !== "all" && row.scenario_id !== scenarioFilter) {
         return false;
       }
@@ -114,84 +254,33 @@ export default function LeaderboardClient({
       }
       return true;
     });
-  }, [leaderboards, suiteId, tier, scenarioFilter, search]);
+  }, [leaderboards, suiteId, scenarioFilter, search]);
 
-  const coverageByMethod = useMemo(() => {
-    const map = new Map<string, Set<string>>();
-    for (const row of leaderboards[suiteId].rows) {
-      const current = map.get(row.method_name) ?? new Set<string>();
-      current.add(row.scenario_id);
-      map.set(row.method_name, current);
-    }
-    return new Map(Array.from(map.entries(), ([method, scenariosSet]) => [method, scenariosSet.size]));
-  }, [leaderboards, suiteId]);
+  const coverageCounts = useMemo(
+    () => buildCoverageCounts(leaderboards[suiteId].rows),
+    [leaderboards, suiteId],
+  );
 
   const aggregates = useMemo<AggregateRow[]>(() => {
-    const grouped = new Map<
-      string,
-      {
-        row_count: number;
-        scenario_ids: Set<string>;
-        metric_T_r2: number;
-        metric_T_dtw: number;
-        metric_S_spectral_corr: number;
-        metric_S_maxlag_corr: number;
-        metric_S_r2: number;
-        method_config_json: string;
-      }
-    >();
+    return buildAggregates(filteredRows, methodMap, coverageCounts, suiteScenarioCount);
+  }, [filteredRows, methodMap, coverageCounts, suiteScenarioCount]);
 
-    for (const row of filteredRows) {
-      const current = grouped.get(row.method_name) ?? {
-        row_count: 0,
-        scenario_ids: new Set<string>(),
-        metric_T_r2: 0,
-        metric_T_dtw: 0,
-        metric_S_spectral_corr: 0,
-        metric_S_maxlag_corr: 0,
-        metric_S_r2: 0,
-        method_config_json: row.method_config_json,
-      };
-      current.row_count += 1;
-      current.scenario_ids.add(row.scenario_id);
-      current.metric_T_r2 += row.metric_T_r2;
-      current.metric_T_dtw += row.metric_T_dtw;
-      current.metric_S_spectral_corr += row.metric_S_spectral_corr;
-      current.metric_S_maxlag_corr += row.metric_S_maxlag_corr;
-      current.metric_S_r2 += row.metric_S_r2 ?? 0;
-      grouped.set(row.method_name, current);
+  const scenarioLeaderboards = useMemo(() => {
+    if (!suite) {
+      return [];
     }
-
-    return Array.from(grouped.entries()).map(([methodName, sums]) => {
-      const count = Math.max(sums.row_count, 1);
-      const metric_T_r2 = sums.metric_T_r2 / count;
-      const metric_T_dtw = sums.metric_T_dtw / count;
-      const metric_S_spectral_corr = sums.metric_S_spectral_corr / count;
-      const metric_S_maxlag_corr = sums.metric_S_maxlag_corr / count;
-      const metric_S_r2 = sums.metric_S_r2 / count;
-      const trend_score = (clip(metric_T_r2) + normalizeDtw(metric_T_dtw)) / 2;
-      const seasonal_score = (metric_S_spectral_corr + metric_S_maxlag_corr) / 2;
-      const overall_score = 0.5 * trend_score + 0.5 * seasonal_score;
-      const meta = methodMap.get(methodName);
+    return suite.scenario_ids.map((scenarioId) => {
+      const rows = leaderboards[suiteId].rows.filter((row) => row.scenario_id === scenarioId);
+      const scenarioCoverage = buildCoverageCounts(rows);
+      const aggregatesForScenario = buildAggregates(rows, methodMap, scenarioCoverage, rows.length ? 1 : 0);
       return {
-        method_name: methodName,
-        display_name: meta?.display_name ?? methodName,
-        needs_period: meta?.needs_period ?? false,
-        method_config_json: sums.method_config_json,
-        coverage_count: coverageByMethod.get(methodName) ?? sums.scenario_ids.size,
-        coverage_total: suiteScenarioCount,
-        row_count: sums.row_count,
-        metric_T_r2,
-        metric_T_dtw,
-        metric_S_spectral_corr,
-        metric_S_maxlag_corr,
-        metric_S_r2,
-        trend_score,
-        seasonal_score,
-        overall_score,
+        scenarioId,
+        scenario: scenarioMap.get(scenarioId),
+        series: scenarioSeriesMap.get(scenarioId),
+        rows: sortAggregates(aggregatesForScenario, view),
       };
     });
-  }, [filteredRows, methodMap, coverageByMethod, suiteScenarioCount]);
+  }, [leaderboards, suite, suiteId, methodMap, scenarioMap, scenarioSeriesMap, view]);
 
   const selectedRows = useMemo(
     () => aggregates.filter((row) => selectedMethods.includes(row.method_name)),
@@ -346,16 +435,6 @@ export default function LeaderboardClient({
               ))}
             </select>
             <select
-              value={tier}
-              onChange={(event) => setTier(event.target.value as "all" | "1" | "2" | "3")}
-              className="rounded-full border border-[color:var(--border)] bg-white px-4 py-2 text-sm font-semibold text-[color:var(--ink)]"
-            >
-              <option value="all">All tiers</option>
-              <option value="1">Tier 1</option>
-              <option value="2">Tier 2</option>
-              <option value="3">Tier 3</option>
-            </select>
-            <select
               value={scenarioFilter}
               onChange={(event) => setScenarioFilter(event.target.value)}
               className="rounded-full border border-[color:var(--border)] bg-white px-4 py-2 text-sm font-semibold text-[color:var(--ink)]"
@@ -422,6 +501,37 @@ export default function LeaderboardClient({
         </div>
       </div>
 
+      <section className="rounded-3xl border border-[color:var(--border)] bg-white/90 p-5 shadow-[var(--shadow)]">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)]">
+              Metric guide
+            </p>
+            <h3 className="mt-1 text-lg font-semibold">How to read each metric</h3>
+          </div>
+          <span className="text-xs text-[color:var(--muted)]">
+            Primary metrics: Trend R2, Trend DTW, Spectral Corr, Max-lag Corr
+          </span>
+        </div>
+        <div className="mt-4 grid gap-4 md:grid-cols-2">
+          {METRIC_GUIDE.map((metric) => (
+            <div
+              key={metric.key}
+              className="rounded-2xl border border-[color:var(--border)] bg-white/80 p-4"
+            >
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-sm font-semibold text-[color:var(--ink)]">{metric.name}</p>
+                <span className="rounded-full border border-[color:var(--border)] px-2 py-0.5 text-xs text-[color:var(--muted)]">
+                  {metric.direction}
+                </span>
+              </div>
+              <p className="mt-2 text-xs text-[color:var(--muted)]">{metric.formula}</p>
+              <p className="mt-2 text-xs text-[color:var(--muted)]">{metric.detail}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {reproMethod && (
         <div className="rounded-3xl border border-[color:var(--border)] bg-white/90 p-5 shadow-[var(--shadow)]">
           <div className="flex items-center justify-between">
@@ -483,6 +593,87 @@ export default function LeaderboardClient({
           </tbody>
         </table>
       </div>
+
+      <section className="space-y-6">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)]">
+            Scenario leaderboards
+          </p>
+          <h3 className="mt-2 text-lg font-semibold">One leaderboard per scenario</h3>
+          <p className="mt-2 text-sm text-[color:var(--muted)]">
+            Ranked by {METRIC_LABELS[view]} for quick scenario-specific diagnostics.
+          </p>
+        </div>
+        <div className="space-y-6">
+          {scenarioLeaderboards.map(({ scenarioId, scenario, series, rows }) => (
+            <div
+              key={scenarioId}
+              className="overflow-hidden rounded-3xl border border-[color:var(--border)] bg-white/90 shadow-[var(--shadow)]"
+            >
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[color:var(--border)] px-5 py-4">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)]">
+                    {scenarioId}
+                  </p>
+                  <p className="mt-1 text-base font-semibold">
+                    {scenario?.family ?? scenarioId} (Tier {scenario?.tier ?? "?"})
+                  </p>
+                </div>
+                <Link
+                  href={`/scenarios/${scenarioId}/`}
+                  className="rounded-full border border-[color:var(--border)] px-3 py-1 text-xs font-semibold text-[color:var(--accent-strong)]"
+                >
+                  View scenario
+                </Link>
+              </div>
+              <div className="grid gap-4 md:grid-cols-[240px_1fr]">
+                <div className="space-y-2 px-5 py-4">
+                  <SeriesSparkline values={series?.values ?? []} height={120} />
+                  <div className="text-xs text-[color:var(--muted)]">
+                    Example series (seed {series?.seed ?? "?"}, length {series?.length ?? "?"})
+                  </div>
+                </div>
+                <div className="overflow-x-auto">
+                  {rows.length ? (
+                    <table className="w-full border-collapse text-left text-sm">
+                      <thead className="bg-[color:var(--bg)]/80 text-xs uppercase tracking-[0.2em] text-[color:var(--muted)]">
+                        <tr>
+                          <th className="px-4 py-3">Method</th>
+                          <th className="px-4 py-3">Trend R2</th>
+                          <th className="px-4 py-3">Trend DTW</th>
+                          <th className="px-4 py-3">Spectral Corr</th>
+                          <th className="px-4 py-3">Max-lag Corr</th>
+                          <th className="px-4 py-3">Overall</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {rows.map((row) => (
+                          <tr key={row.method_name} className="border-t border-[color:var(--border)]">
+                            <td className="px-4 py-4 font-semibold">
+                              <Link href={`/methods/${row.method_name}/`} className="text-[color:var(--ink)]">
+                                {row.display_name}
+                              </Link>
+                            </td>
+                            <td className="px-4 py-4">{row.metric_T_r2.toFixed(3)}</td>
+                            <td className="px-4 py-4">{row.metric_T_dtw.toFixed(3)}</td>
+                            <td className="px-4 py-4">{row.metric_S_spectral_corr.toFixed(3)}</td>
+                            <td className="px-4 py-4">{row.metric_S_maxlag_corr.toFixed(3)}</td>
+                            <td className="px-4 py-4">{row.overall_score.toFixed(3)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  ) : (
+                    <div className="px-5 py-6 text-sm text-[color:var(--muted)]">
+                      No data for this scenario.
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
       <div className="grid gap-6 md:grid-cols-[1.1fr_0.9fr]">
         <div className="rounded-3xl border border-[color:var(--border)] bg-white/90 p-5 shadow-[var(--shadow)]">

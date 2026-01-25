@@ -8,10 +8,14 @@ import {
   LeaderboardFileSchema,
   MethodsFile,
   MethodsFileSchema,
+  SrFormulaExamplesFile,
+  SrFormulaExamplesFileSchema,
   ApiReferenceFile,
   ApiReferenceFileSchema,
   ScenariosFile,
   ScenariosFileSchema,
+  ScenarioSeriesFile,
+  ScenarioSeriesFileSchema,
   SuitesFile,
   SuitesFileSchema,
 } from "@/lib/schemas";
@@ -33,6 +37,11 @@ export const getScenarios = cache(async (): Promise<ScenariosFile> => {
   return ScenariosFileSchema.parse(payload);
 });
 
+export const getScenarioSeries = cache(async (): Promise<ScenarioSeriesFile> => {
+  const payload = await readJson<ScenarioSeriesFile>("scenario_series.json");
+  return ScenarioSeriesFileSchema.parse(payload);
+});
+
 export const getMethods = cache(async (): Promise<MethodsFile> => {
   const payload = await readJson<MethodsFile>("methods.json");
   return MethodsFileSchema.parse(payload);
@@ -42,6 +51,11 @@ export const getLeaderboard = cache(async (suiteId: "core" | "full"): Promise<Le
   const filename = suiteId === "core" ? "leaderboard_core.json" : "leaderboard_full.json";
   const payload = await readJson<LeaderboardFile>(filename);
   return LeaderboardFileSchema.parse(payload);
+});
+
+export const getSrFormulaExamples = cache(async (): Promise<SrFormulaExamplesFile> => {
+  const payload = await readJson<SrFormulaExamplesFile>("sr_formula_examples.json");
+  return SrFormulaExamplesFileSchema.parse(payload);
 });
 
 export const getApiReference = cache(async (): Promise<ApiReferenceFile> => {
