@@ -14,14 +14,14 @@ const navItems = [
 
 export function Sidebar() {
   return (
-    <aside className="w-64 flex-shrink-0 border-r border-gray-200 bg-white min-h-screen hidden md:block">
-      <div className="p-4">
+    <aside className="w-64 flex-shrink-0 border-r border-[color:var(--border)] bg-[color:var(--surface)] min-h-screen hidden md:block">
+      <div className="py-6 px-4">
         <nav className="space-y-1">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="block px-4 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 hover:text-gray-900"
+              className="block px-3 py-2 text-[15px] text-[color:var(--ink)] hover:bg-[color:var(--bg)] hover:text-[color:var(--accent)] border-l-2 border-transparent hover:border-[color:var(--accent)] transition-colors rounded-r-md"
             >
               {item.label}
             </Link>

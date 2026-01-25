@@ -5,11 +5,20 @@
   color-scheme: light;
   --bg: #ffffff;
   --surface: #f8f9fa;
-  --ink: #333333;
-  --muted: #666666;
-  --accent: #2980b9; 
-  --accent-strong: #1c5a85;
-  --border: #e0e0e0;
+  --ink: #212529;
+  /* Darker, standard readability black */
+  --muted: #6c757d;
+  /* Standard muted text */
+  --accent: #2980b9;
+  /* Sklearn/Sphinx Blue */
+  --accent-strong: #1a5c85;
+  /* Darker blue for hover */
+  --accent-orange: #f58025;
+  /* Sklearn Orange for highlights/branding */
+  --border: #e6e6e6;
+  --font-display: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif;
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif;
+  --font-mono: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
 @theme inline {
@@ -59,9 +68,11 @@ pre {
   .font-display {
     font-family: var(--font-display);
   }
+
   .font-mono {
     font-family: var(--font-mono);
   }
+
   .text-muted {
     color: var(--muted);
   }
