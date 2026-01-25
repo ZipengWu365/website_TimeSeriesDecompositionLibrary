@@ -616,7 +616,7 @@ export default function LeaderboardClient({
                     {scenarioId}
                   </p>
                   <p className="mt-1 text-base font-semibold">
-                    {scenario?.family ?? scenarioId} (Tier {scenario?.tier ?? "?"})
+                    {scenario?.family ?? scenarioId}
                   </p>
                 </div>
                 <Link

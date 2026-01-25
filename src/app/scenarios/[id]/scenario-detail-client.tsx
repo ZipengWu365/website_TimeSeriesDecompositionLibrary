@@ -223,9 +223,6 @@ export default function ScenarioDetailClient() {
           <div className="mt-4 grid gap-3 text-sm text-[color:var(--muted)]">
             <div className="flex flex-wrap gap-2">
               <span className="rounded-full border border-[color:var(--border)] px-3 py-1">
-                Tier {scenario.tier}
-              </span>
-              <span className="rounded-full border border-[color:var(--border)] px-3 py-1">
                 Base periods: {scenario.base_periods.length ? scenario.base_periods.join(", ") : "none"}
               </span>
               <span className="rounded-full border border-[color:var(--border)] px-3 py-1">

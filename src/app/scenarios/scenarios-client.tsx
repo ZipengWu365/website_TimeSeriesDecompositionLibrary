@@ -10,7 +10,6 @@ type ScenariosClientProps = {
 };
 
 export default function ScenariosClient({ scenarios, suites }: ScenariosClientProps) {
-  const [tier, setTier] = useState<"all" | "1" | "2" | "3">("all");
   const [query, setQuery] = useState("");
 
   const scenarioSuites = useMemo(() => {
@@ -27,9 +26,6 @@ export default function ScenariosClient({ scenarios, suites }: ScenariosClientPr
 
   const filtered = useMemo(() => {
     return scenarios.filter((scenario) => {
-      if (tier !== "all" && scenario.tier !== Number(tier)) {
-        return false;
-      }
       if (query.trim()) {
         const q = query.toLowerCase();
         return (
@@ -40,21 +36,11 @@ export default function ScenariosClient({ scenarios, suites }: ScenariosClientPr
       }
       return true;
     });
-  }, [scenarios, tier, query]);
+  }, [scenarios, query]);
 
   return (
     <section className="mt-10 space-y-6">
       <div className="flex flex-wrap items-center gap-3 rounded-3xl border border-[color:var(--border)] bg-white/85 p-5 shadow-[var(--shadow)]">
-        <select
-          value={tier}
-          onChange={(event) => setTier(event.target.value as "all" | "1" | "2" | "3")}
-          className="rounded-full border border-[color:var(--border)] bg-white px-4 py-2 text-sm font-semibold"
-        >
-          <option value="all">All tiers</option>
-          <option value="1">Tier 1</option>
-          <option value="2">Tier 2</option>
-          <option value="3">Tier 3</option>
-        </select>
         <input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
@@ -75,7 +61,6 @@ export default function ScenariosClient({ scenarios, suites }: ScenariosClientPr
           >
             <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted)]">
               <span>{scenario.scenario_id}</span>
-              <span>Tier {scenario.tier}</span>
             </div>
             <h3 className="mt-3 text-lg font-semibold">{scenario.family}</h3>
             <p className="mt-2 text-sm text-[color:var(--muted)]">{scenario.description}</p>
