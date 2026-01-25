@@ -32,7 +32,7 @@ export default function ExamplesPage() {
         <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[color:var(--muted)]">
           Examples
         </p>
-        <h1 className="text-3xl font-semibold md:text-4xl">Sklearn-style decomposition recipes.</h1>
+        <h1 className="text-3xl font-semibold md:text-4xl text-[color:var(--ink)]">Decomposition recipes.</h1>
         <p className="text-sm text-[color:var(--muted)]">
           Each case includes a reproducible command, expected behavior, and diagnostic plots.
         </p>
