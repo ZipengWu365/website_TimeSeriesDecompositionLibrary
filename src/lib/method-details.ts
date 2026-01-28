@@ -328,8 +328,8 @@ modes, _, omega = VMD(y, alpha, tau, K, DC, init, tol)`,
         caption: "VMD frequency-domain optimization intuition.",
       },
       {
-        src: "/figs/fig08_vmd_success_1766848314528.png",
-        caption: "VMD maintains seasonal recovery under frequency drift.",
+        src: "/figs/decomp_compare_rw_trend_freq_drifting_cycle.png",
+        caption: "Drift scenario comparison across multiple methods.",
       },
     ],
     assumptions: [
@@ -402,7 +402,7 @@ return _gabor_to_decomp_result(y, gabor_result, "bands")`,
     ],
     figures: [
       {
-        src: "/figs/fig09_heatmap_1766848349088.png",
+        src: "/figs/combined_radar_charts.png",
         caption: "Benchmark heatmap including Gabor-band performance.",
       },
     ],
@@ -431,7 +431,7 @@ gabor_result = gabor_decompose(y, gabor_cfg)`,
     ],
     figures: [
       {
-        src: "/figs/fig09_heatmap_1766848349088.png",
+        src: "/figs/combined_radar_charts.png",
         caption: "Benchmark heatmap including Gabor-ridge performance.",
       },
     ],
@@ -461,7 +461,7 @@ xj = _istft_rfft(Zj, L, hop, n_fft, window, N)`,
     ],
     figures: [
       {
-        src: "/figs/fig09_heatmap_1766848349088.png",
+        src: "/figs/combined_radar_charts.png",
         caption: "Benchmark heatmap including Gabor-cluster performance.",
       },
     ],
@@ -494,7 +494,7 @@ if not _HAS_FASTTIMES:
     ],
     figures: [
       {
-        src: "/figs/fig09_heatmap_1766848349088.png",
+        src: "/figs/combined_radar_charts.png",
         caption: "Benchmark heatmap including STD placeholder results.",
       },
     ],
@@ -525,7 +525,7 @@ if not _HAS_FASTTIMES:
     ],
     figures: [
       {
-        src: "/figs/fig09_heatmap_1766848349088.png",
+        src: "/figs/combined_radar_charts.png",
         caption: "Benchmark heatmap for baseline comparisons.",
       },
     ],
@@ -560,7 +560,7 @@ if not _HAS_FASTTIMES:
     ],
     figures: [
       {
-        src: "/figs/fig09_heatmap_1766848349088.png",
+        src: "/figs/combined_radar_charts.png",
         caption: "Benchmark heatmap for baseline comparisons.",
       },
     ],
@@ -590,7 +590,7 @@ if not _HAS_FASTTIMES:
     ],
     figures: [
       {
-        src: "/figs/fig09_heatmap_1766848349088.png",
+        src: "/figs/combined_radar_charts.png",
         caption: "Benchmark heatmap for baseline comparisons.",
       },
     ],

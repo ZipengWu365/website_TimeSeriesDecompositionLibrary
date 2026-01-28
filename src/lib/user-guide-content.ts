@@ -264,18 +264,13 @@ structure that cannot be captured without spreading energy across many basis ele
 
 ## Failure Mode III: Adaptive Robustness Boundaries
 
-VMD favors spectral compactness. A drifting-frequency cycle is globally broadband but locally
-narrow-band—substantial recovery remains possible. The boundary is highly broadband or
-overlapping drifting components.
+Adaptive spectral methods can retain seasonal structure when drift remains locally narrow-band,
+but performance is configuration-dependent under broadband or overlapping drifting components.
 `,
         figures: [
             {
                 src: "/figs/fig07_stl_failure_1766848255126.png",
                 caption: "STL failure on frequency-drifting signals.",
-            },
-            {
-                src: "/figs/fig08_vmd_success_1766848314528.png",
-                caption: "VMD success on chirp signals due to spectral compactness.",
             },
         ],
     },
@@ -303,8 +298,8 @@ overlapping drifting components.
 `,
         figures: [
             {
-                src: "/figs/benchmark_4panel_summary.png",
-                caption: "Symbolic regression benchmark summary.",
+                src: "/figs/combined_radar_charts.png",
+                caption: "Latest benchmark radar summary (2026-01-28).",
             },
         ],
     },
