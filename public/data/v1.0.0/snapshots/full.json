@@ -1,0 +1,1 @@
+{"suite_id":"full","suite_version":"1.0.0","artifact_id":"tscomp_v1_full_20260123","package_version":"","git_commit":"","seeds":[0],"n_samples":50,"length":512,"dt":1.0,"methods":["CEEMDAN","EMD","GABOR_BANDS","GABOR_CLUSTER","GABOR_RIDGE","MA_BASELINE","MSTL","ROBUSTSTL","SSA","STD","STL","VMD","WAVELET"],"generated_at":"2026-01-26T19:19:15.351298+00:00"}
